@@ -3,18 +3,21 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using AnimeMacrocosm.Interface;
 using AnimeMacrocosm.Models;
+using AnimeMacrocosm.Settings;
 
 namespace AnimeMacrocosm.Repository
 {
-    public class PostsRepository : IIPosts
-    {        
+    public class PostsRepository : IPostRepository
+    {
+        private readonly AppSettings _appSettings;
+
         public List<Post> GetPosts()
         {
             List<Post> posts = new List<Post>();
 
             try
             {
-                using (SqlConnection connection = new SqlConnection())
+                using (SqlConnection connection = new SqlConnection(_appSettings.ConnectionStrings.DefaultConnection))
                 {
                     connection.Open();
 
@@ -41,7 +44,7 @@ namespace AnimeMacrocosm.Repository
 
             try
             {
-                using (SqlConnection connection = new SqlConnection())
+                using (SqlConnection connection = new SqlConnection(_appSettings.ConnectionStrings.DefaultConnection))
                 {
                     connection.Open();
 

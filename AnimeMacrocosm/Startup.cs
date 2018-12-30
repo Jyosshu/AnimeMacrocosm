@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
@@ -10,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using AnimeMacrocosm.Models;
 
 namespace AnimeMacrocosm
 {
@@ -43,6 +45,16 @@ namespace AnimeMacrocosm
 
             app.UseHttpsRedirection();
             app.UseMvc();
+        }
+
+        private static void InitializeAppSettings(IServiceCollection serviceCollection)
+        {
+            IConfigurationRoot config = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", false, true)
+                .Build();
+
+            serviceCollection.Configure<AppSettings>(config);
         }
     }
 }

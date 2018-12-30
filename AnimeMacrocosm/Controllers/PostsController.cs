@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using AnimeMacrocosm.Models;
+using AnimeMacrocosm.Interface;
 
 namespace AnimeMacrocosm.Controllers
 {
@@ -12,20 +13,23 @@ namespace AnimeMacrocosm.Controllers
     [ApiController]
     public class PostsController : ControllerBase
     {
-        // GET: api/Posts
-        [HttpGet]
-        public List<Post> GetPosts()
+        private readonly IPostRepository _postRepository;
+
+        public PostsController(IPostRepository postRepository)
         {
-            List<Post> posts = new List<Post>();
-            return posts;
+            _postRepository = postRepository;
         }
 
+        // GET: api/Posts
+        [HttpGet]
+        public IActionResult GetPosts() => Ok(_postRepository.GetPosts().OrderBy(i => i.PostId));
+
+
         // GET: api/Posts/5
-        [HttpGet("{id}", Name = "Get")]
-        public string GetPostById(int id)
-        {
-            return "value";
-        }
+        [HttpGet]
+        [Route("/[controller]/[action]/{id}")]
+        public IActionResult GetPostById(int id) => Ok(_postRepository.GetPostById(id));
+        
 
         // POST: api/Posts
         [HttpPost]

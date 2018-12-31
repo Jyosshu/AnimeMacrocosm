@@ -38,6 +38,6 @@ namespace AnimeMacrocosm.Models
         [ForeignKey("Format")]
         public int FormatId { get; set; }
 
-        public DateTime ReleaseDate { get; set; }
+        public DateTime? ReleaseDate { get; set; }
     }
 }

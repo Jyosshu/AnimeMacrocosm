@@ -18,7 +18,6 @@ namespace AnimeMacrocosm.Models
         public DbSet<Genre> Genres { get; set; }
         public DbSet<Distributor> Distributors { get; set; }
         public DbSet<ProductionStudio> ProductionStudios { get; set; }
-        public DbSet<MediaType> MediaTypes { get; set; }
         public DbSet<Image> Images { get; set; }
     }
 }

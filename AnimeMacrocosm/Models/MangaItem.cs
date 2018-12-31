@@ -30,8 +30,11 @@ namespace AnimeMacrocosm.Models
         [ForeignKey("Creator")]
         public int CreatorAuthorId { get; set; }
 
+        [ForeignKey("Format")]
+        public int FormatId { get; set; }
+
         public int PageCount { get; set; }
 
-        public DateTime ReleaseDate { get; set; }
+        public DateTime? ReleaseDate { get; set; }
     }
 }

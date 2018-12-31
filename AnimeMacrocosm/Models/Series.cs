@@ -20,8 +20,5 @@ namespace AnimeMacrocosm.Models
 
         [ForeignKey("Genre")]
         public int GenreId { get; set; }
-
-        [ForeignKey("MediaType")]
-        public int MediaTypeId { get; set; }
     }
 }

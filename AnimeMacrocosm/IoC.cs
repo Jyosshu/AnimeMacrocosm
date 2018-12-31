@@ -11,6 +11,7 @@ namespace AnimeMacrocosm
         public static void RegisterDependencies(IServiceCollection services)
         {
             services.AddTransient<IPostRepository, PostsRepository>();
+            services.AddTransient<ISeriesRepository, SeriesRepository>();
         }
     }
 }

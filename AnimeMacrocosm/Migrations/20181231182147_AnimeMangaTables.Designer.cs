@@ -4,14 +4,16 @@ using AnimeMacrocosm.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AnimeMacrocosm.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class PostsContextModelSnapshot : ModelSnapshot
+    [Migration("20181231182147_AnimeMangaTables")]
+    partial class AnimeMangaTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,7 +39,7 @@ namespace AnimeMacrocosm.Migrations
 
                     b.Property<int>("ProductionId");
 
-                    b.Property<DateTime?>("ReleaseDate");
+                    b.Property<DateTime>("ReleaseDate");
 
                     b.Property<string>("RunTime");
 
@@ -132,13 +134,11 @@ namespace AnimeMacrocosm.Migrations
 
                     b.Property<int>("DistributorId");
 
-                    b.Property<int>("FormatId");
-
                     b.Property<int>("ImageId");
 
                     b.Property<int>("PageCount");
 
-                    b.Property<DateTime?>("ReleaseDate");
+                    b.Property<DateTime>("ReleaseDate");
 
                     b.Property<int>("SeriesId");
 
@@ -147,6 +147,19 @@ namespace AnimeMacrocosm.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("MangaItems");
+                });
+
+            modelBuilder.Entity("AnimeMacrocosm.Models.MediaType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("MediaTypeName");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MediaTypes");
                 });
 
             modelBuilder.Entity("AnimeMacrocosm.Models.Post", b =>
@@ -193,6 +206,8 @@ namespace AnimeMacrocosm.Migrations
                     b.Property<int>("CreatorAuthorId");
 
                     b.Property<int>("GenreId");
+
+                    b.Property<int>("MediaTypeId");
 
                     b.Property<string>("Title");
 

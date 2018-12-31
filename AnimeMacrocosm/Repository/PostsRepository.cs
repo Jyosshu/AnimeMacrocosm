@@ -4,12 +4,18 @@ using System.Data.SqlClient;
 using AnimeMacrocosm.Interface;
 using AnimeMacrocosm.Models;
 using AnimeMacrocosm.Settings;
+using Microsoft.Extensions.Options;
 
 namespace AnimeMacrocosm.Repository
 {
     public class PostsRepository : IPostRepository
     {
         private readonly AppSettings _appSettings;
+
+        public PostsRepository(IOptionsSnapshot<AppSettings> appSettings)
+        {
+            _appSettings = appSettings.Value;
+        }
 
         public List<Post> GetPosts()
         {

@@ -31,9 +31,10 @@ namespace AnimeMacrocosm
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            var connection = @"Server=.\\SQLEXPRESS;Database=AM;Trusted_Connection=True;ConnectRetryCount=0";
-            services.AddDbContext<PostsContext>
-                (options => options.UseSqlServer(connection));
+           services.AddDbContext<PostsContext>
+                (options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            IoC.RegisterDependencies(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -12,15 +12,13 @@ namespace AnimeMacrocosm.Models
         [StringLength(100)]
         public string PostTitle { get; set; }
 
-        [StringLength(30)]
-        public string PostCreator { get; set; }
-
         public DateTime PostDate { get; set; }
 
         [MaxLength]
         public string PostContent { get; set; }
 
-        [ForeignKey("User")]
-        public int PostCreatorRefId { get; set; }
+        [ForeignKey("Users")]
+        public int ApplicationUserRefId { get; set; }
+        public ApplicationUser Users { get; set; }
     }
 }

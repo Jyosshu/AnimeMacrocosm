@@ -17,7 +17,7 @@ namespace AnimeMacrocosm.Controllers
 
         // GET: api/Posts
         [HttpGet]
-        public IActionResult GetPosts() => Ok(_postRepository.GetPosts().OrderBy(i => i.PostId));
+        public IActionResult GetAllPosts() => Ok(_postRepository.GetAllPosts().OrderBy(i => i.PostId));
 
 
         // GET: api/Posts/5

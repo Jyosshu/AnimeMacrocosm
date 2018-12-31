@@ -5,7 +5,7 @@ namespace AnimeMacrocosm.Interface
 {
     public interface IPostRepository
     {
-        List<Post> GetPosts();
+        List<Post> GetAllPosts();
         Post GetPostById(int postId);
     }
 }

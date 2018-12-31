@@ -17,7 +17,7 @@ namespace AnimeMacrocosm.Repository
             _appSettings = appSettings.Value;
         }
 
-        public List<Post> GetPosts()
+        public List<Post> GetAllPosts()
         {
             List<Post> posts = new List<Post>();
 
@@ -27,7 +27,7 @@ namespace AnimeMacrocosm.Repository
                 {
                     connection.Open();
 
-                    SqlCommand sqlCommand = new SqlCommand("Select * FROM Posts", connection);
+                    SqlCommand sqlCommand = new SqlCommand(_getAllPostQuery, connection);
                     SqlDataReader reader = sqlCommand.ExecuteReader();
 
                     while (reader.Read())
@@ -75,14 +75,29 @@ namespace AnimeMacrocosm.Repository
         {
             Post post = new Post()
             {
-                PostId = Convert.ToInt32(reader["postId"]),
-                PostCreator = Convert.ToString(reader["PostCreator"]),
+                PostId = Convert.ToInt32(reader["PostId"]),
                 PostTitle = Convert.ToString(reader["PostTitle"]),
                 PostDate = DateTime.Parse(Convert.ToString(reader["PostDate"])),
-                PostContent = Convert.ToString(reader["PostContent"])
+                PostContent = Convert.ToString(reader["PostContent"]),
+                ApplicationUserRefId = Convert.ToInt32(reader["UserId"]),
+                Users = new ApplicationUser()
+                {
+                    UserEmailAddress = Convert.ToString(reader["UserEmailAddress"]),
+                    UserScreenName = Convert.ToString(reader["UserScreenName"])
+                }
             };
 
             return post;
         }
+
+        private readonly string _getAllPostQuery = @"SELECT p.PostId
+, p.PostTitle
+, p.PostDate
+, p.PostContent
+, u.UserId
+, u.UserEmailAddress
+, u.UserScreenName
+FROM Posts p
+Inner Join Users u ON u.UserId = p.ApplicationUserRefId";
     }
 }

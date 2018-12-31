@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AnimeMacrocosm.Migrations
 {
-    [DbContext(typeof(PostsContext))]
+    [DbContext(typeof(ApplicationContext))]
     [Migration("20181231003716_InitialCreate")]
     partial class InitialCreate
     {

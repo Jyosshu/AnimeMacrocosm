@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AnimeMacrocosm.Models
 {
@@ -18,5 +19,8 @@ namespace AnimeMacrocosm.Models
 
         [MaxLength]
         public string PostContent { get; set; }
+
+        [ForeignKey("User")]
+        public int PostCreatorRefId { get; set; }
     }
 }

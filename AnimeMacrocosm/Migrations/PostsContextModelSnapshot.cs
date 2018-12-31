@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AnimeMacrocosm.Migrations
 {
-    [DbContext(typeof(PostsContext))]
+    [DbContext(typeof(ApplicationContext))]
     partial class PostsContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

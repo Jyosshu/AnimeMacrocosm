@@ -3,12 +3,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AnimeMacrocosm.Models
 {
-    public class PostsContext : DbContext
+    public class ApplicationContext : DbContext
     {
-        public PostsContext(DbContextOptions<PostsContext> options)
+        public ApplicationContext(DbContextOptions<ApplicationContext> options)
             : base(options)
         { }
 
         public DbSet<Post> Posts { get; set; }
+        public DbSet<ApplicationUser> Users { get; set; }
     }
 }

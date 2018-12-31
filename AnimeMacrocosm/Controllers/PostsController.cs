@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using AnimeMacrocosm.Models;
 using AnimeMacrocosm.Interface;
 
 namespace AnimeMacrocosm.Controllers

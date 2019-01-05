@@ -19,5 +19,6 @@ namespace AnimeMacrocosm.Models
         public DbSet<Distributor> Distributors { get; set; }
         public DbSet<ProductionStudio> ProductionStudios { get; set; }
         public DbSet<Image> Images { get; set; }
+        public DbSet<Format> Formats { get; set; }
     }
 }

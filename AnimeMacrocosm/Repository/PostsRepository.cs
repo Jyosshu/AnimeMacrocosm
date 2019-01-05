@@ -54,8 +54,8 @@ namespace AnimeMacrocosm.Repository
                 {
                     connection.Open();
 
-                    SqlCommand sqlCommand = new SqlCommand("SELECT * FROM Posts WHERE PostId = @postId");
-                    sqlCommand.Parameters.AddWithValue("postId", postId);
+                    SqlCommand sqlCommand = new SqlCommand($"{_getAllPostQuery} WHERE PostId = @postId", connection);
+                    sqlCommand.Parameters.AddWithValue("@postId", postId);
                     SqlDataReader reader = sqlCommand.ExecuteReader();
 
                     while (reader.Read())

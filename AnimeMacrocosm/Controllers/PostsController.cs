@@ -4,7 +4,7 @@ using AnimeMacrocosm.Interface;
 
 namespace AnimeMacrocosm.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]/[action]")]
     [ApiController]
     public class PostsController : ControllerBase
     {
@@ -26,22 +26,22 @@ namespace AnimeMacrocosm.Controllers
         public IActionResult GetPostById(int id) => Ok(_postRepository.GetPostById(id));
         
 
-        // POST: api/Posts
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
+        //// POST: api/Posts
+        //[HttpPost]
+        //public void Post([FromBody] string value)
+        //{
+        //}
 
-        // PUT: api/Posts/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
+        //// PUT: api/Posts/5
+        //[HttpPut("{id}")]
+        //public void Put(int id, [FromBody] string value)
+        //{
+        //}
 
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+        //// DELETE: api/ApiWithActions/5
+        //[HttpDelete("{id}")]
+        //public void Delete(int id)
+        //{
+        //}
     }
 }

@@ -7,6 +7,6 @@ namespace AnimeMacrocosm.Interface
     {
         List<Series> GetAllSeries();
         Series GetSeriesById(int seriesId);
-        List<Series> GetSeriesByGenre(int genreId);
+        // List<Series> GetSeriesByGenre(int genreId);
     }
 }

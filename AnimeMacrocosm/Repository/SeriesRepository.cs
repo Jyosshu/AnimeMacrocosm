@@ -54,8 +54,8 @@ namespace AnimeMacrocosm.Repository
                 {
                     connection.Open();
 
-                    SqlCommand sqlCommand = new SqlCommand("SELECT * FROM Series WHERE SeriesId = @seriesId");
-                    sqlCommand.Parameters.AddWithValue("seriesId", seriesId);
+                    SqlCommand sqlCommand = new SqlCommand("SELECT * FROM Series WHERE SeriesId = @seriesId", connection);
+                    sqlCommand.Parameters.AddWithValue("@seriesId", seriesId);
                     SqlDataReader reader = sqlCommand.ExecuteReader();
 
                     while (reader.Read())
@@ -72,33 +72,33 @@ namespace AnimeMacrocosm.Repository
             return series;
         }
 
-        public List<Series> GetSeriesByGenre(int genreId)
-        {
-            List<Series> seriesByGenre = new List<Series>();
+        //public List<Series> GetSeriesByGenre(int genreId)
+        //{
+        //    List<Series> seriesByGenre = new List<Series>();
 
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(_appSettings.ConnectionStrings.DefaultConnection))
-                {
-                    connection.Open();
+        //    try
+        //    {
+        //        using (SqlConnection connection = new SqlConnection(_appSettings.ConnectionStrings.DefaultConnection))
+        //        {
+        //            connection.Open();
 
-                    SqlCommand sqlCommand = new SqlCommand("SELECT * FROM Series WHERE GenreId = @genreId");
-                    sqlCommand.Parameters.AddWithValue("seriesId", genreId);
-                    SqlDataReader reader = sqlCommand.ExecuteReader();
+        //            SqlCommand sqlCommand = new SqlCommand("SELECT * FROM Series WHERE GenreId = @genreId");
+        //            sqlCommand.Parameters.AddWithValue("seriesId", genreId);
+        //            SqlDataReader reader = sqlCommand.ExecuteReader();
 
-                    while (reader.Read())
-                    {
-                        seriesByGenre.Add(MapRowToSeries(reader));
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"There was a general exception retrieving series: {genreId}. {ex.Message}");
-            }
+        //            while (reader.Read())
+        //            {
+        //                seriesByGenre.Add(MapRowToSeries(reader));
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine($"There was a general exception retrieving series: {genreId}. {ex.Message}");
+        //    }
 
-            return seriesByGenre;
-        }
+        //    return seriesByGenre;
+        //}
 
         private Series MapRowToSeries(SqlDataReader reader)
         {
@@ -106,8 +106,7 @@ namespace AnimeMacrocosm.Repository
             {
                 SeriesId = Convert.ToInt32(reader["SeriesId"]),
                 Title = Convert.ToString(reader["Title"]),
-                CreatorAuthorId = Convert.ToInt32(reader["CreatorAuthorId"]),
-                GenreId = Convert.ToInt32(reader["GenreId"])                
+                CreatorAuthorId = Convert.ToInt32(reader["CreatorAuthorId"]),                
             };
 
             return tempSeries;

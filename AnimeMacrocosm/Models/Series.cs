@@ -17,8 +17,5 @@ namespace AnimeMacrocosm.Models
 
         [ForeignKey("CreatorAuthor")]
         public int CreatorAuthorId { get; set; }
-
-        [ForeignKey("Genre")]
-        public int GenreId { get; set; }
     }
 }

@@ -27,7 +27,7 @@ namespace AnimeMacrocosm.Repository
                 {
                     connection.Open();
 
-                    SqlCommand sqlCommand = new SqlCommand(_getAllPostQuery, connection);
+                    SqlCommand sqlCommand = new SqlCommand($"{_getAllPostQuery} Order By p.PostDate DESC", connection);
                     SqlDataReader reader = sqlCommand.ExecuteReader();
 
                     while (reader.Read())
@@ -69,6 +69,27 @@ namespace AnimeMacrocosm.Repository
                 Console.WriteLine($"There was a general exception retrieving post: {postId}. {ex.Message}");
             }
             return post;
+        }
+
+        public List<Post> GetPostsByUserId(int userId)
+        {
+            List<Post> posts = new List<Post>();
+
+            using (SqlConnection connection = new SqlConnection(_appSettings.ConnectionStrings.DefaultConnection))
+            {
+                connection.Open();
+
+                SqlCommand sqlCommand = new SqlCommand($"{_getAllPostQuery} Where u.UserId = @userId Order By p.PostDate DESC", connection);
+                sqlCommand.Parameters.AddWithValue("@userId", userId);
+                SqlDataReader reader = sqlCommand.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    posts.Add(MapRowToPost(reader));
+                }
+            }
+
+                return posts;
         }
 
         private Post MapRowToPost(SqlDataReader reader)

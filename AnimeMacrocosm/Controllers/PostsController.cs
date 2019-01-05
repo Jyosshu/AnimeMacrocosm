@@ -24,6 +24,10 @@ namespace AnimeMacrocosm.Controllers
         [HttpGet]
         [Route("/[controller]/[action]/{id}")]
         public IActionResult GetPostById(int id) => Ok(_postRepository.GetPostById(id));
+
+        [HttpGet]
+        [Route("/[controller]/[action]/{id}")]
+        public IActionResult GetPostsByUserId(int id) => Ok(_postRepository.GetPostsByUserId(id));
         
 
         //// POST: api/Posts

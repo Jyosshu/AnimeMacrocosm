@@ -7,5 +7,6 @@ namespace AnimeMacrocosm.Interface
     {
         List<Post> GetAllPosts();
         Post GetPostById(int postId);
+        List<Post> GetPostsByUserId(int userId);
     }
 }

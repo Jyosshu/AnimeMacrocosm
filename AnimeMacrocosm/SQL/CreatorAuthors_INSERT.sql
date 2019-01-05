@@ -1,0 +1,7 @@
+INSERT INTO CreatorAuthors (FirstName,LastName) VALUES ('Katsuhiro','Otomo')
+INSERT INTO CreatorAuthors (FirstName,LastName) VALUES ('Mamoru','Oshii')
+INSERT INTO CreatorAuthors (FirstName,LastName) VALUES ('Satoru','Ozawa')
+INSERT INTO CreatorAuthors (FirstName,LastName) VALUES ('Toshimichi','Suzuki')
+INSERT INTO CreatorAuthors (FirstName,LastName) VALUES ('Chiaki','Konaka')
+--INSERT INTO CreatorAuthors (FirstName,LastName) VALUES ('','')
+--INSERT INTO CreatorAuthors (FirstName,LastName) VALUES ('','')

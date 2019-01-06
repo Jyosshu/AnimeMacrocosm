@@ -4,7 +4,7 @@ INSERT INTO CreatorAuthors (FirstName,LastName) VALUES ('Satoru','Ozawa')
 INSERT INTO CreatorAuthors (FirstName,LastName) VALUES ('Toshimichi','Suzuki')
 INSERT INTO CreatorAuthors (FirstName,LastName) VALUES ('Chiaki','Konaka')
 INSERT INTO CreatorAuthors (FirstName,LastName) VALUES ('Clamp','');
-INSERT INTO CreatorAuthors (FirstName,LastName) VALUES ('Cain','Kuga');
+INSERT INTO CreatorAuthors (FirstName,LastName) VALUES ('Keiko','Nobumoto');
 INSERT INTO CreatorAuthors (FirstName,LastName) VALUES ('Yōsuke','Kuroda');
 INSERT INTO CreatorAuthors (FirstName,LastName) VALUES ('Ryoe','Tsukimura');
 INSERT INTO CreatorAuthors (FirstName,LastName) VALUES ('Ryousuke','Takahashi');

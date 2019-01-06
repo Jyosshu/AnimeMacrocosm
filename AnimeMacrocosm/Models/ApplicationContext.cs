@@ -10,7 +10,7 @@ namespace AnimeMacrocosm.Models
         { }
 
         public DbSet<Post> Posts { get; set; }
-        public DbSet<ApplicationUser> Users { get; set; }
+        public DbSet<User> Users { get; set; }
         public DbSet<Series> Series { get; set; }
         public DbSet<AnimeItem> AnimeItems { get; set; }
         public DbSet<MangaItem> MangaItems { get; set; }

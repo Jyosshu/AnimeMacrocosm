@@ -31,3 +31,4 @@ INSERT INTO Genres (GenreType) VALUES ('Shotacon');
 INSERT INTO Genres (GenreType) VALUES ('Yaoi');
 INSERT INTO Genres (GenreType) VALUES ('Yuri');
 INSERT INTO Genres (GenreType) VALUES ('Cyberpunk');
+INSERT INTO Genres (GenreType) VALUES ('Magical girl');

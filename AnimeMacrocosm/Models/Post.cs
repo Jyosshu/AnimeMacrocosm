@@ -19,6 +19,6 @@ namespace AnimeMacrocosm.Models
 
         [ForeignKey("Users")]
         public int ApplicationUserRefId { get; set; }
-        public ApplicationUser Users { get; set; }
+        public User Users { get; set; }
     }
 }

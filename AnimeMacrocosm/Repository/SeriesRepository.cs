@@ -105,8 +105,7 @@ namespace AnimeMacrocosm.Repository
             Series tempSeries = new Series()
             {
                 SeriesId = Convert.ToInt32(reader["SeriesId"]),
-                Title = Convert.ToString(reader["Title"]),
-                CreatorAuthorId = Convert.ToInt32(reader["CreatorAuthorId"]),                
+                Title = Convert.ToString(reader["Title"]),                              
             };
 
             return tempSeries;

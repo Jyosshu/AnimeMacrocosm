@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace AnimeMacrocosm.Models
@@ -11,24 +11,14 @@ namespace AnimeMacrocosm.Models
 
         [Key]
         public int Id { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
 
-        private string _firstName;
-        public string FirstName
-        {
-            get => _firstName;
-            set => _firstName = value;
-        }
-
-        private string _lastName;
-        public string LastName
-        {
-            get => _lastName;
-            set => _lastName = value;
-        }
+        public List<SeriesCreator> SeriesCreators { get; set; }
 
         public string FullName()
         {
             return $"{FirstName} {LastName}";
-        }
+        }        
     }
 }

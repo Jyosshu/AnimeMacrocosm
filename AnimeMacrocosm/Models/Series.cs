@@ -1,6 +1,5 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AnimeMacrocosm.Models
 {
@@ -15,7 +14,6 @@ namespace AnimeMacrocosm.Models
 
         public string Title { get; set; }
 
-        [ForeignKey("CreatorAuthor")]
-        public int CreatorAuthorId { get; set; }
+        public List<SeriesCreator> SeriesCreators { get; set; }
     }
 }

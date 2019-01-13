@@ -115,7 +115,8 @@ ORDER BY s.Title";
             {
                 SeriesId = Convert.ToInt32(reader["SeriesId"]),
                 Title = Convert.ToString(reader["Title"]),
-                SeriesCreators = new List<SeriesCreator>()
+                SeriesCreators = new List<SeriesCreator>(),
+                SeriesItems = new List<SeriesItem>()
             };
 
             SeriesCreator seriesCreator = new SeriesCreator()
@@ -130,6 +131,37 @@ ORDER BY s.Title";
 
             tempSeries.SeriesCreators.Add(seriesCreator);
             return tempSeries;
+        }
+
+        private SeriesItem MapRowToSeriesItem(SqlDataReader reader)
+        {
+            SeriesItem seriesItem = new SeriesItem()
+            {
+                Id = Convert.ToInt32(reader["SeriesItemId"]),
+                SeriesId = Convert.ToInt32(reader["SeriesId"]),
+                Title = Convert.ToString(reader["SeriesTitle"]),
+                Description = Convert.ToString(reader["Description"]),
+                ProductionStudio = new ProductionStudio()
+                {
+                    Id = Convert.ToInt32(reader["ProductionStudioId"]),
+                    ProductionStudioName = Convert.ToString(reader["ProductionStudioName"]),
+                    Country = Convert.ToString(reader["ProductionStudioCountry"])
+                },
+                Distributor = new Distributor()
+                {
+                    Id = Convert.ToInt32(reader["DistributorId"]),
+                    DistributorName = Convert.ToString(reader["DistributorName"]),
+                    Country = Convert.ToString(reader["DistributorCountry"])
+                },
+                Length = Convert.ToString(reader["SeriesItemLength"]),
+                Format = new Format()
+                {
+                    FormatId = Convert.ToInt32(reader["FormatId"]),
+                    FormatName = Convert.ToString(reader["FormatName"])
+                },
+                ReleaseDate = DateTime.Parse(Convert.ToString(reader["ReleaseDate"]))
+            };
+            return seriesItem;
         }
     }
 }

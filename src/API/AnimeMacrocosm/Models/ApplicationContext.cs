@@ -12,8 +12,7 @@ namespace AnimeMacrocosm.Models
         public DbSet<Post> Posts { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Series> Series { get; set; }
-        public DbSet<AnimeItem> AnimeItems { get; set; }
-        public DbSet<MangaItem> MangaItems { get; set; }
+        public DbSet<SeriesItem> AnimeItems { get; set; }
         public DbSet<CreatorAuthor> CreatorAuthors { get; set; }
         public DbSet<SeriesCreator> SeriesCreators { get; set; }
         public DbSet<Genre> Genres { get; set; }
@@ -37,50 +36,40 @@ namespace AnimeMacrocosm.Models
                 .WithMany(c => c.SeriesCreators)
                 .HasForeignKey(sc => sc.CreatorId);
 
-            modelBuilder.Entity<AnimeItem>()
+            modelBuilder.Entity<SeriesItem>()
                 .HasOne(ai => ai.Series)
-                .WithMany(s => s.AnimeItems)
+                .WithMany(s => s.SeriesItems)
                 .HasForeignKey(ai => ai.SeriesId);
 
-            modelBuilder.Entity<MangaItem>()
-                .HasOne(mi => mi.Series)
-                .WithMany(s => s.MangaItems)
-                .HasForeignKey(mi => mi.SeriesId);
+            //modelBuilder.Entity<AnimeItem>()
+            //    .HasOne(ai => ai.ProductionStudio)
+            //    .WithMany(ps => ps.AnimeItems)
+            //    .HasForeignKey(ai => ai.ProductionId);
 
-            modelBuilder.Entity<AnimeItem>()
-                .HasOne(ai => ai.ProductionStudio)
-                .WithMany(ps => ps.AnimeItems)
-                .HasForeignKey(ai => ai.ProductionId);
+            //modelBuilder.Entity<AnimeItem>()
+            //    .HasOne(ai => ai.Distributor)
+            //    .WithMany(d => d.AnimeItems)
+            //    .HasForeignKey(ai => ai.DistributorId);
 
-            modelBuilder.Entity<AnimeItem>()
-                .HasOne(ai => ai.Distributor)
-                .WithMany(d => d.AnimeItems)
-                .HasForeignKey(ai => ai.DistributorId);
+            //modelBuilder.Entity<MangaItem>()
+            //    .HasOne(mi => mi.Distributor)
+            //    .WithMany(d => d.MangaItems)
+            //    .HasForeignKey(mi => mi.DistributorId);
 
-            modelBuilder.Entity<MangaItem>()
-                .HasOne(mi => mi.Distributor)
-                .WithMany(d => d.MangaItems)
-                .HasForeignKey(mi => mi.DistributorId);
+            //modelBuilder.Entity<AnimeItem>()
+            //    .HasOne(ai => ai.Format)
+            //    .WithMany(f => f.AnimeItems)
+            //    .HasForeignKey(ai => ai.FormatId);
 
-            modelBuilder.Entity<AnimeItem>()
-                .HasOne(ai => ai.Format)
-                .WithMany(f => f.AnimeItems)
-                .HasForeignKey(ai => ai.FormatId);
-
-            modelBuilder.Entity<MangaItem>()
-                .HasOne(mi => mi.Format)
-                .WithMany(f => f.MangaItems)
-                .HasForeignKey(mi => mi.FormatId);
+            //modelBuilder.Entity<MangaItem>()
+            //    .HasOne(mi => mi.Format)
+            //    .WithMany(f => f.MangaItems)
+            //    .HasForeignKey(mi => mi.FormatId);
 
             modelBuilder.Entity<Image>()
-                .HasOne(i => i.AnimeItem)
-                .WithMany(ai => ai.AnimeItemImages)
-                .HasForeignKey(i => i.AnimeItemId);
-
-            modelBuilder.Entity<Image>()
-                .HasOne(i => i.MangaItem)
-                .WithMany(mi => mi.MangaItemImages)
-                .HasForeignKey(i => i.MangaItemId);
+                .HasOne(i => i.SeriesItem)
+                .WithMany(ai => ai.SeriesItemImages)
+                .HasForeignKey(i => i.SeriesItemId);
         }
     }
 }

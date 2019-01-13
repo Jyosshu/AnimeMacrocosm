@@ -5,9 +5,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AnimeMacrocosm.Models
 {
-    public class MangaItem
+    public class SeriesItem
     {
-        public MangaItem()
+        public SeriesItem()
         {
         }
 
@@ -22,8 +22,12 @@ namespace AnimeMacrocosm.Models
 
         [MaxLength]
         public string Description { get; set; }
+        
+        public List<Image> SeriesItemImages { get; set; }
 
-        public List<Image> MangaItemImages { get; set; }
+        [ForeignKey("ProductionStudio")]
+        public int ProductionId { get; set; }
+        public ProductionStudio ProductionStudio { get; set; }
 
         [ForeignKey("Distributor")]
         public int DistributorId { get; set; }
@@ -31,13 +35,13 @@ namespace AnimeMacrocosm.Models
 
         [ForeignKey("Creator")]
         public int CreatorAuthorId { get; set; }
-        public CreatorAuthor CreatorAuthor { get; set; }
+        public List<CreatorAuthor> CreatorAuthors { get; set; }
+
+        public string Length { get; set; }
 
         [ForeignKey("Format")]
         public int FormatId { get; set; }
         public Format Format { get; set; }
-
-        public int PageCount { get; set; }
 
         public DateTime? ReleaseDate { get; set; }
     }

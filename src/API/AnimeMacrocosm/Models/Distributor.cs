@@ -15,7 +15,6 @@ namespace AnimeMacrocosm.Models
         public string DistributorName { get; set; }
         public string Country { get; set; }
 
-        public List<AnimeItem> AnimeItems { get; set; }
-        public List<MangaItem> MangaItems { get; set; }
+        public List<SeriesItem> SeriesItems { get; set; }
     }
 }

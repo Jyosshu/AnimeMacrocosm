@@ -15,8 +15,6 @@ namespace AnimeMacrocosm.Models
 
         public List<SeriesCreator> SeriesCreators { get; set; }
 
-        public List<AnimeItem> AnimeItems { get; set; }
-
-        public List<MangaItem> MangaItems { get; set; }
+        public List<SeriesItem> SeriesItems { get; set; }
     }
 }

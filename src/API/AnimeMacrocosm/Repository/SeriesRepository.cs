@@ -20,6 +20,15 @@ namespace AnimeMacrocosm.Repository
         public List<Series> GetAllSeries()
         {
             List<Series> series = new List<Series>();
+            const string GET_ALL_QUERY = @"SELECT s.SeriesId 
+, s.Title
+, ca.Id 'CreatorAuthorId'
+, ca.FirstName
+, ca.LastName 
+FROM Series s
+Inner Join SeriesCreators sc ON sc.SeriesId = s.SeriesId
+Inner Join CreatorAuthors ca ON ca.Id = sc.CreatorId
+ORDER BY s.Title";
 
             try
             {
@@ -27,7 +36,7 @@ namespace AnimeMacrocosm.Repository
                 {
                     connection.Open();
 
-                    SqlCommand sqlCommand = new SqlCommand("SELECT * FROM Series ORDER BY Title", connection);
+                    SqlCommand sqlCommand = new SqlCommand(GET_ALL_QUERY, connection);
                     SqlDataReader reader = sqlCommand.ExecuteReader();
 
                     while (reader.Read())
@@ -105,9 +114,21 @@ namespace AnimeMacrocosm.Repository
             Series tempSeries = new Series()
             {
                 SeriesId = Convert.ToInt32(reader["SeriesId"]),
-                Title = Convert.ToString(reader["Title"]),                              
+                Title = Convert.ToString(reader["Title"]),
+                SeriesCreators = new List<SeriesCreator>()
             };
 
+            SeriesCreator seriesCreator = new SeriesCreator()
+            {                 
+                CreatorAuthor = new CreatorAuthor()
+                {
+                    Id = Convert.ToInt32(reader["CreatorAuthorId"]),
+                    FirstName = Convert.ToString(reader["FirstName"]),
+                    LastName = Convert.ToString(reader["LastName"]),
+                }
+            };
+
+            tempSeries.SeriesCreators.Add(seriesCreator);
             return tempSeries;
         }
     }

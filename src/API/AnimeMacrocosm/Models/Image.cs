@@ -15,12 +15,18 @@ namespace AnimeMacrocosm.Models
 
         public string ImagePath { get; set; }
 
-        [ForeignKey("AnimeItem")]
-        public int AnimeItemId { get; set; }
-        public AnimeItem AnimeItem { get; set; }
+        public string ImageCaption { get; set; }
 
-        [ForeignKey("MangaItem")]
-        public int MangaItemId { get; set; }
-        public MangaItem MangaItem { get; set; }
+        public string ImageDimensions { get; set; }
+
+        public string ImageFormat { get; set; }
+
+        [ForeignKey("Series")]
+        public int SeriesId { get; set; }
+        public Series Series { get; set; }
+
+        [ForeignKey("SeriesItem")]
+        public int SeriesItemId { get; set; }
+        public SeriesItem SeriesItem { get; set; }
     }
 }

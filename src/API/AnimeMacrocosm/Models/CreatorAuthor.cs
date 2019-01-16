@@ -5,10 +5,6 @@ namespace AnimeMacrocosm.Models
 {
     public class CreatorAuthor
     {
-        public CreatorAuthor()
-        {
-        }
-
         [Key]
         public int Id { get; set; }
         public string FirstName { get; set; }

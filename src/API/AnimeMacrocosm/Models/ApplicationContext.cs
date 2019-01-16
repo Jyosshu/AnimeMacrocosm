@@ -66,10 +66,13 @@ namespace AnimeMacrocosm.Models
             //    .WithMany(f => f.MangaItems)
             //    .HasForeignKey(mi => mi.FormatId);
 
-            modelBuilder.Entity<Image>()
-                .HasOne(i => i.SeriesItem)
-                .WithMany(ai => ai.SeriesItemImages)
-                .HasForeignKey(i => i.SeriesItemId);
+            modelBuilder.Entity<SeriesItemImage>()
+                .HasKey(s => new { s.SeriesItemId, s.ImageId });
+
+            //modelBuilder.Entity<SeriesItemImage>()
+            //    .HasOne(s => s.SeriesItem)
+            //    .WithMany(i => i.SeriesItemImages)
+            //    .HasForeignKey(i => i.SeriesItemId);
         }
     }
 }

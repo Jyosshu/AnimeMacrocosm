@@ -11,7 +11,7 @@ namespace AnimeMacrocosm.Models
         }
 
         [Key]
-        public int Id { get; set; }
+        public int ImageId { get; set; }
 
         public string ImagePath { get; set; }
 

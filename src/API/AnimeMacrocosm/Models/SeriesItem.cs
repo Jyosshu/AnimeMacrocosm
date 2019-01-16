@@ -7,10 +7,6 @@ namespace AnimeMacrocosm.Models
 {
     public class SeriesItem
     {
-        public SeriesItem()
-        {
-        }
-
         [Key]
         public int Id { get; set; }
 

@@ -5,10 +5,6 @@ namespace AnimeMacrocosm.Models
 {
     public class Genre
     {
-        public Genre()
-        {
-        }
-
         [Key]
         public int Id { get; set; }
 

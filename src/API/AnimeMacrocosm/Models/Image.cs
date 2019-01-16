@@ -6,10 +6,6 @@ namespace AnimeMacrocosm.Models
 {
     public class Image
     {
-        public Image()
-        {
-        }
-
         [Key]
         public int Id { get; set; }
 
@@ -23,10 +19,8 @@ namespace AnimeMacrocosm.Models
 
         [ForeignKey("Series")]
         public int SeriesId { get; set; }
-        public Series Series { get; set; }
 
         [ForeignKey("SeriesItem")]
         public int SeriesItemId { get; set; }
-        public SeriesItem SeriesItem { get; set; }
     }
 }

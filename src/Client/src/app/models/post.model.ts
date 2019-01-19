@@ -6,8 +6,7 @@ export class Post {
         public postTitle: string = '',
         public postDate: Date = null,
         public postContent: string = '',
-        public postUser: PostUser = new PostUser(),
-        // public postCreatorId: number = 0,
-        // public postCreatorUserName: string = '',
+        
+        public user: PostUser = new PostUser(),
     ) { }
 }

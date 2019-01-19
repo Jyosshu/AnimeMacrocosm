@@ -19,7 +19,7 @@ export class PostsService {
   getAllPosts(): Observable<Post[]> { 
     return this.httpClient.get<Post[]>(`${environment.apiEndpoint}/Posts/GetAllPosts`)
     .pipe(
-      // tap(_ => this.log('fetched posts')),
+      // tap(_ => console.log('fetched posts')),
       catchError(this.handleError('getAllPosts', []))
     );
   }

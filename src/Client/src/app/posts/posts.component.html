@@ -1,11 +1,13 @@
 <h3>Posts:</h3>
+
 <div *ngFor="let post of posts">
-  <h3>{{ post.postTitle }}</h3>>
+  <h3>{{ post.p }}</h3>>
   <p>{{ post.postContent }}</p>
 </div>
 
 <ul class="posts">
   <li *ngFor="let post of posts">
     {{ post.postTitle }}
+    <a routerLink="/detail/{{post.postId}}"></a>
   </li>
 </ul>

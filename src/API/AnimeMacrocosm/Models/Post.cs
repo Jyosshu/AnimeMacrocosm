@@ -17,8 +17,8 @@ namespace AnimeMacrocosm.Models
         [MaxLength]
         public string PostContent { get; set; }
 
-        [ForeignKey("Users")]
-        public int ApplicationUserRefId { get; set; }
-        public User Users { get; set; }
+        //[ForeignKey("Users")]
+        //public int ApplicationUserRefId { get; set; }
+        public User User { get; set; }
     }
 }

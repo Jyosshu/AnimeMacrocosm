@@ -100,9 +100,10 @@ namespace AnimeMacrocosm.Repository
                 PostTitle = Convert.ToString(reader["PostTitle"]),
                 PostDate = DateTime.Parse(Convert.ToString(reader["PostDate"])),
                 PostContent = Convert.ToString(reader["PostContent"]),
-                ApplicationUserRefId = Convert.ToInt32(reader["UserId"]),
-                Users = new User()
+                //ApplicationUserRefId = Convert.ToInt32(reader["UserId"]),
+                User = new User()
                 {
+                    UserId = Convert.ToInt32(reader["UserId"]),
                     UserEmailAddress = Convert.ToString(reader["UserEmailAddress"]),
                     UserScreenName = Convert.ToString(reader["UserScreenName"])
                 }

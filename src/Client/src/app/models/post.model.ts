@@ -1,4 +1,4 @@
-import { PostUser } from '../models/post.user.model';
+import { User } from '../models/post.user.model';
 
 export class Post {
     constructor(
@@ -7,6 +7,6 @@ export class Post {
         public postDate: Date = null,
         public postContent: string = '',
         
-        public user: PostUser = new PostUser(),
+        public user: User = new User(),
     ) { }
 }

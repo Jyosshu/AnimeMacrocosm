@@ -1,0 +1,6 @@
+
+<div *ngFor="let item of series">
+  <a routerLink="series/detail/{{ item.seriesId }}">{{ item.title }}</a>
+</div>
+
+<!-- | {{ item.seriesCreator.creatorAuthor.firstName }} -->

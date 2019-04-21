@@ -1,13 +1,6 @@
 <h3>Posts:</h3>
 
 <div *ngFor="let post of posts">
-  <h3>{{ post.p }}</h3>>
+  <h4>{{ post.postTitle }} | {{ post.postDate }} | <a href="mailto:{{post.user.userEmailAddress}}">{{ post.user.userScreenName }}</a></h4>
   <p>{{ post.postContent }}</p>
 </div>
-
-<ul class="posts">
-  <li *ngFor="let post of posts">
-    {{ post.postTitle }}
-    <a routerLink="/detail/{{post.postId}}"></a>
-  </li>
-</ul>

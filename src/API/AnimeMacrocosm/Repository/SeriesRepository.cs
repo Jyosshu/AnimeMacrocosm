@@ -129,6 +129,21 @@ ORDER BY s.Title";
                 }
             };
 
+            // TODO: Add the objects to seriesItem for the associated IDs?
+            SeriesItem seriesItem = new SeriesItem
+            {
+                Id = Convert.ToInt32(reader[""]), // TODO: fill in this collumn
+                SeriesId = Convert.ToInt32("SeriesId"),
+                Title = Convert.ToString(reader["Title"]),
+                Description = Convert.ToString(reader["Description"]),
+                ProductionId = Convert.ToInt32(reader["ProductionId"]),
+                DistributorId = Convert.ToInt32(reader["DistrobutionId"]),
+                CreatorAuthorId = Convert.ToInt32(reader["CreatorAuthorId"]),
+                Length = Convert.ToString(reader["Length"]),
+                FormatId = Convert.ToInt32(reader["FormatId"]),
+                ReleaseDate = Convert.ToDateTime(reader["ReleaseDate"])
+            };
+
             tempSeries.SeriesCreators.Add(seriesCreator);
             return tempSeries;
         }

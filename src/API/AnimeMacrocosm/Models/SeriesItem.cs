@@ -19,7 +19,7 @@ namespace AnimeMacrocosm.Models
         [MaxLength]
         public string Description { get; set; }
         
-        public List<Image> SeriesItemImages { get; set; }
+        public List<SeriesItemImage> SeriesItemImages { get; set; }
 
         [ForeignKey("ProductionStudio")]
         public int ProductionId { get; set; }

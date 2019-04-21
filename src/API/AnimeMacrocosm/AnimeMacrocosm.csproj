@@ -18,6 +18,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20190421143953_ChangedAnimeItemToSeriesItem.cs" />
+    <Compile Remove="Migrations\20190421143953_ChangedAnimeItemToSeriesItem.Designer.cs" />
     <Compile Remove="Models\SimpleModels.cs" />
   </ItemGroup>
 </Project>

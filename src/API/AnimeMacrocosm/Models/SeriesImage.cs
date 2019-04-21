@@ -2,11 +2,11 @@
 
 namespace AnimeMacrocosm.Models
 {
-    public class SeriesItemImage
+    public class SeriesImage
     {
-        [ForeignKey("SeriesItem")]
-        public int SeriesItemId { get; set; }
-        public SeriesItem SeriesItem { get; set; }
+        [ForeignKey("Series")]
+        public int SeriesId { get; set; }
+        public Series Series { get; set; }
 
         [ForeignKey("Image")]
         public int ImageId { get; set; }

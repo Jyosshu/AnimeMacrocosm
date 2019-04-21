@@ -1,6 +1,5 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AnimeMacrocosm.Models
 {
@@ -17,10 +16,14 @@ namespace AnimeMacrocosm.Models
 
         public string ImageFormat { get; set; }
 
-        [ForeignKey("Series")]
-        public int SeriesId { get; set; }
+        public List<SeriesImage> SeriesImages { get; set; }
 
-        [ForeignKey("SeriesItem")]
-        public int SeriesItemId { get; set; }
+        public List<SeriesItemImage> SeriesItemImages { get; set; }
+
+        //[ForeignKey("Series")]
+        //public int SeriesId { get; set; }
+
+        //[ForeignKey("SeriesItem")]
+        //public int SeriesItemId { get; set; }
     }
 }

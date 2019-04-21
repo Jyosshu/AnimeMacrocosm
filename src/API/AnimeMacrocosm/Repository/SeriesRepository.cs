@@ -20,15 +20,26 @@ namespace AnimeMacrocosm.Repository
         public List<Series> GetAllSeries()
         {
             List<Series> series = new List<Series>();
-            const string GET_ALL_QUERY = @"SELECT s.SeriesId 
-, s.Title
+            const string GET_ALL_QUERY = @"SELECT se.SeriesId 
+, se.Title
 , ca.Id 'CreatorAuthorId'
 , ca.FirstName
-, ca.LastName 
-FROM Series s
-Inner Join SeriesCreators sc ON sc.SeriesId = s.SeriesId
-Inner Join CreatorAuthors ca ON ca.Id = sc.CreatorId
-ORDER BY s.Title";
+, ca.LastName
+, si.Id 'SeriesItemId'
+, si.SeriesId
+, si.Title
+, si.Description
+, si.ProductionId
+, si.DistributorId
+, si.CreatorAuthorId
+, si.Length
+, si.FormatId
+, si.ReleaseDate
+FROM Series se
+INNER JOIN SeriesCreators sc ON sc.SeriesId = se.SeriesId
+INNER JOIN CreatorAuthors ca ON ca.Id = sc.CreatorId
+INNER JOIN SeriesItems si ON si.SeriesId = se.SeriesId
+ORDER BY se.Title";
 
             try
             {
@@ -57,13 +68,20 @@ ORDER BY s.Title";
         {
             Series series = new Series();
 
+            string SERIES_BY_ID_SELECT = @"SELECT *
+FROM Series se
+INNER JOIN SeriesCreators sc ON sc.SeriesId = se.SeriesId
+INNER JOIN CreatorAuthors ca ON ca.Id = sc.CreatorId
+INNER JOIN SeriesItems si ON si.SeriesId = se.SeriesId
+WHERE se.SeriesId = @seriesId";
+
             try
             {
                 using (SqlConnection connection = new SqlConnection(_appSettings.ConnectionStrings.DefaultConnection))
                 {
                     connection.Open();
 
-                    SqlCommand sqlCommand = new SqlCommand("SELECT * FROM Series WHERE SeriesId = @seriesId", connection);
+                    SqlCommand sqlCommand = new SqlCommand(SERIES_BY_ID_SELECT, connection);
                     sqlCommand.Parameters.AddWithValue("@seriesId", seriesId);
                     SqlDataReader reader = sqlCommand.ExecuteReader();
 
@@ -129,22 +147,26 @@ ORDER BY s.Title";
                 }
             };
 
-            // TODO: Add the objects to seriesItem for the associated IDs?
-            SeriesItem seriesItem = new SeriesItem
-            {
-                Id = Convert.ToInt32(reader[""]), // TODO: fill in this collumn
-                SeriesId = Convert.ToInt32("SeriesId"),
-                Title = Convert.ToString(reader["Title"]),
-                Description = Convert.ToString(reader["Description"]),
-                ProductionId = Convert.ToInt32(reader["ProductionId"]),
-                DistributorId = Convert.ToInt32(reader["DistrobutionId"]),
-                CreatorAuthorId = Convert.ToInt32(reader["CreatorAuthorId"]),
-                Length = Convert.ToString(reader["Length"]),
-                FormatId = Convert.ToInt32(reader["FormatId"]),
-                ReleaseDate = Convert.ToDateTime(reader["ReleaseDate"])
-            };
-
             tempSeries.SeriesCreators.Add(seriesCreator);
+
+            // TODO: Add the objects to seriesItem for the associated IDs?
+            //SeriesItem seriesItem = new SeriesItem
+            //{
+            //    Id = Convert.ToInt32(reader["Id"]), // TODO: fill in this collumn
+            //    SeriesId = Convert.ToInt32("SeriesId"),
+            //    Title = Convert.ToString(reader["Title"]),
+            //    Description = Convert.ToString(reader["Description"]),
+            //    ProductionId = Convert.ToInt32(reader["ProductionId"]),
+            //    DistributorId = Convert.ToInt32(reader["DistrobutionId"]),
+            //    CreatorAuthorId = Convert.ToInt32(reader["CreatorAuthorId"]),
+            //    Length = Convert.ToString(reader["Length"]),
+            //    FormatId = Convert.ToInt32(reader["FormatId"]),
+            //    ReleaseDate = Convert.ToDateTime(reader["ReleaseDate"])
+            //};
+            SeriesItem seriesItem = MapRowToSeriesItem(reader);
+
+            tempSeries.SeriesItems.Add(seriesItem);
+
             return tempSeries;
         }
 
@@ -154,7 +176,7 @@ ORDER BY s.Title";
             {
                 Id = Convert.ToInt32(reader["SeriesItemId"]),
                 SeriesId = Convert.ToInt32(reader["SeriesId"]),
-                Title = Convert.ToString(reader["SeriesTitle"]),
+                Title = Convert.ToString(reader["Title"]),
                 Description = Convert.ToString(reader["Description"]),
                 ProductionStudio = new ProductionStudio
                 {

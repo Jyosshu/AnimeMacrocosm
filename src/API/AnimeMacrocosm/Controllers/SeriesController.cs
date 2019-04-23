@@ -24,6 +24,10 @@ namespace AnimeMacrocosm.Controllers
         [Route("/[controller]/[action]/{id}")]
         public IActionResult GetSeriesById(int id) => Ok(_seriesRepository.GetSeriesById(id));
 
+        [HttpGet]
+        [Route("/[controller]/[action]/{id}")]
+        public IActionResult GetSeriesItemById(int id) => Ok(_seriesRepository.GetSeriesItemById(id));
+
         // POST: api/Series
         //[HttpPost]
         //public void Post([FromBody] string value)

@@ -99,6 +99,60 @@ WHERE se.SeriesId = @seriesId";
             return series;
         }
 
+        public SeriesItem GetSeriesItemById(int seriesItemId)
+        {
+            SeriesItem seriesItem = new SeriesItem();
+
+            string SERIES_ITEM_SELECT = @"SELECT se.SeriesId 
+, se.Title
+, ca.Id 'CreatorAuthorId'
+, ca.FirstName
+, ca.LastName
+, si.Id 'SeriesItemId'
+, si.SeriesId
+, si.Title
+, si.Description
+, si.ProductionId
+, ps.ProductionStudioName
+, si.DistributorId
+, di.DistributorName
+, si.CreatorAuthorId
+, si.FormatId
+, fo.FormatName
+FROM Series se
+INNER JOIN SeriesCreators sc ON sc.SeriesId = se.SeriesId
+INNER JOIN CreatorAuthors ca ON ca.Id = sc.CreatorId
+INNER JOIN SeriesItems si ON si.SeriesId = se.SeriesId
+INNER JOIN ProductionStudios ps ON ps.Id = si.ProductionId
+INNER JOIN Distributors di ON di.Id = si.DistributorId
+INNER JOIN Formats fo ON fo.FormatId = si.FormatId
+WHERE si.id = @seriesItemId";
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(_appSettings.ConnectionStrings.DefaultConnection))
+                {
+                    connection.Open();
+
+                    SqlCommand sqlCommand = new SqlCommand(SERIES_ITEM_SELECT, connection);
+                    sqlCommand.Parameters.AddWithValue("@seriesItemId", seriesItemId);
+                    SqlDataReader reader = sqlCommand.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        seriesItem = MapRowToSeriesItem(reader);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"There was a general exception retrieving series: {seriesItemId}. {ex.Message}");
+            }
+
+            return seriesItem;
+        }
+
+
         //public List<Series> GetSeriesByGenre(int genreId)
         //{
         //    List<Series> seriesByGenre = new List<Series>();
@@ -182,21 +236,25 @@ WHERE se.SeriesId = @seriesId";
                 {
                     Id = Convert.ToInt32(reader["ProductionStudioId"]),
                     ProductionStudioName = Convert.ToString(reader["ProductionStudioName"]),
-                    Country = Convert.ToString(reader["ProductionStudioCountry"])
+                    // Country = Convert.ToString(reader["ProductionStudioCountry"])
                 },
                 Distributor = new Distributor
                 {
                     Id = Convert.ToInt32(reader["DistributorId"]),
                     DistributorName = Convert.ToString(reader["DistributorName"]),
-                    Country = Convert.ToString(reader["DistributorCountry"])
+                    // Country = Convert.ToString(reader["DistributorCountry"])
                 },
-                Length = Convert.ToString(reader["SeriesItemLength"]),
+                // Length = Convert.ToString(reader["SeriesItemLength"]),
+                //CreatorAuthors = new List<CreatorAuthor>()
+                //{
+                    
+                //},
                 Format = new Format
                 {
                     FormatId = Convert.ToInt32(reader["FormatId"]),
                     FormatName = Convert.ToString(reader["FormatName"])
                 },
-                ReleaseDate = DateTime.Parse(Convert.ToString(reader["ReleaseDate"]))
+                // ReleaseDate = DateTime.Parse(Convert.ToString(reader["ReleaseDate"]))
             };
             return seriesItem;
         }

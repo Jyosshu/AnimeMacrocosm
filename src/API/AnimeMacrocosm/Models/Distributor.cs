@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
 
 namespace AnimeMacrocosm.Models
 {
     public class Distributor
     {
-        [Key]
         public int DistributorId { get; set; }
         public string DistributorName { get; set; }
         public string Country { get; set; }

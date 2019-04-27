@@ -1,12 +1,10 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AnimeMacrocosm.Models
 {
     public class Post
     {
-        [Key]
         public int PostId { get; set; }
 
         [StringLength(100)]
@@ -17,7 +15,8 @@ namespace AnimeMacrocosm.Models
         [MaxLength]
         public string PostContent { get; set; }
 
-        //[ForeignKey("Users")] // TODO: UserId here, or maybe using a new UserPosts joined table?
+        // TODO: UserId here, or maybe using a new UserPosts joined table?
+        //[ForeignKey("Users")]
         //public int ApplicationUserRefId { get; set; }
         public User User { get; set; }
     }

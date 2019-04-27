@@ -31,7 +31,7 @@ namespace AnimeMacrocosm.Models
 
         [ForeignKey("Creator")]
         public int CreatorAuthorId { get; set; }
-        public List<CreatorAuthor> CreatorAuthors { get; set; }
+        public CreatorAuthor CreatorAuthors { get; set; }
 
         public string Length { get; set; }
 

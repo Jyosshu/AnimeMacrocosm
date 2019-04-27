@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using AnimeMacrocosm.Interface;
 using AnimeMacrocosm.Models;
@@ -27,12 +28,17 @@ namespace AnimeMacrocosm.Repository
                 {
                     connection.Open();
 
-                    SqlCommand sqlCommand = new SqlCommand($"{_getAllPostQuery} Order By p.PostDate DESC", connection);
-                    SqlDataReader reader = sqlCommand.ExecuteReader();
+                    SqlCommand sqlCommand = new SqlCommand($"{GET_ALL_POST_SELECT_QUERY} Order By p.PostDate DESC", connection);
 
-                    while (reader.Read())
+                    using (SqlDataReader reader = sqlCommand.ExecuteReader())
                     {
-                        posts.Add(MapRowToPost(reader));
+                        if (reader.HasRows)
+                        {
+                            while (reader.Read())
+                            {
+                                posts.Add(MapRowToPost(reader));
+                            }
+                        }
                     }
                 }
             }
@@ -54,13 +60,19 @@ namespace AnimeMacrocosm.Repository
                 {
                     connection.Open();
 
-                    SqlCommand sqlCommand = new SqlCommand($"{_getAllPostQuery} WHERE PostId = @postId", connection);
-                    sqlCommand.Parameters.AddWithValue("@postId", postId);
-                    SqlDataReader reader = sqlCommand.ExecuteReader();
+                    SqlCommand sqlCommand = new SqlCommand($"{GET_ALL_POST_SELECT_QUERY} WHERE PostId = @postId", connection);
+                    sqlCommand.Parameters.Add("@postId", SqlDbType.Int);
+                    sqlCommand.Parameters["@postId"].Value = postId;
 
-                    while (reader.Read())
+                    using (SqlDataReader reader = sqlCommand.ExecuteReader())
                     {
-                        post = MapRowToPost(reader);
+                        if (reader.HasRows)
+                        {
+                            while (reader.Read())
+                            {
+                                post = MapRowToPost(reader);
+                            }
+                        }
                     }
                 }
             }
@@ -79,13 +91,18 @@ namespace AnimeMacrocosm.Repository
             {
                 connection.Open();
 
-                SqlCommand sqlCommand = new SqlCommand($"{_getAllPostQuery} Where u.UserId = @userId Order By p.PostDate DESC", connection);
+                SqlCommand sqlCommand = new SqlCommand($"{GET_ALL_POST_SELECT_QUERY} Where u.UserId = @userId Order By p.PostDate DESC", connection);
                 sqlCommand.Parameters.AddWithValue("@userId", userId);
-                SqlDataReader reader = sqlCommand.ExecuteReader();
 
-                while (reader.Read())
+                using (SqlDataReader reader = sqlCommand.ExecuteReader())
                 {
-                    posts.Add(MapRowToPost(reader));
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            posts.Add(MapRowToPost(reader));
+                        }
+                    }
                 }
             }
 
@@ -112,7 +129,7 @@ namespace AnimeMacrocosm.Repository
             return post;
         }
 
-        private readonly string _getAllPostQuery = @"SELECT p.PostId
+        private readonly string GET_ALL_POST_SELECT_QUERY = @"SELECT p.PostId
 , p.PostTitle
 , p.PostDate
 , p.PostContent

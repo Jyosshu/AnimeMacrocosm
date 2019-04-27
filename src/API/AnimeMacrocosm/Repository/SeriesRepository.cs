@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using AnimeMacrocosm.Interface;
 using AnimeMacrocosm.Models;
@@ -20,39 +21,24 @@ namespace AnimeMacrocosm.Repository
         public List<Series> GetAllSeries()
         {
             List<Series> series = new List<Series>();
-            const string GET_ALL_QUERY = @"SELECT se.SeriesId 
-, se.Title
-, ca.Id 'CreatorAuthorId'
-, ca.FirstName
-, ca.LastName
-, si.Id 'SeriesItemId'
-, si.SeriesId
-, si.Title
-, si.Description
-, si.ProductionId
-, si.DistributorId
-, si.CreatorAuthorId
-, si.Length
-, si.FormatId
-, si.ReleaseDate
-FROM Series se
-INNER JOIN SeriesCreators sc ON sc.SeriesId = se.SeriesId
-INNER JOIN CreatorAuthors ca ON ca.Id = sc.CreatorId
-INNER JOIN SeriesItems si ON si.SeriesId = se.SeriesId
-ORDER BY se.Title";
-
+            
             try
             {
                 using (SqlConnection connection = new SqlConnection(_appSettings.ConnectionStrings.DefaultConnection))
                 {
                     connection.Open();
 
-                    SqlCommand sqlCommand = new SqlCommand(GET_ALL_QUERY, connection);
-                    SqlDataReader reader = sqlCommand.ExecuteReader();
+                    SqlCommand sqlCommand = new SqlCommand(GET_ALL_SERIES_SELECT_QUERY, connection);
 
-                    while (reader.Read())
+                    using (SqlDataReader reader = sqlCommand.ExecuteReader())
                     {
-                        series.Add(MapRowToSeries(reader));
+                        if (reader.HasRows)
+                        {
+                            while (reader.Read())
+                            {
+                                series.Add(MapRowToSeries(reader));
+                            }
+                        }
                     }
                 }
             }
@@ -82,13 +68,19 @@ WHERE se.SeriesId = @seriesId";
                     connection.Open();
 
                     SqlCommand sqlCommand = new SqlCommand(SERIES_BY_ID_SELECT, connection);
-                    sqlCommand.Parameters.AddWithValue("@seriesId", seriesId);
-                    SqlDataReader reader = sqlCommand.ExecuteReader();
+                    sqlCommand.Parameters.Add("@seriesId", SqlDbType.Int);
+                    sqlCommand.Parameters["@seriesId"].Value = seriesId;
 
-                    while (reader.Read())
+                    using (SqlDataReader reader = sqlCommand.ExecuteReader())
                     {
-                        series = MapRowToSeries(reader);
-                    }
+                        if (reader.HasRows)
+                        {
+                            while (reader.Read())
+                            {
+                                series = MapRowToSeries(reader);
+                            }
+                        }
+                    }                    
                 }
             }
             catch (Exception ex)
@@ -104,13 +96,12 @@ WHERE se.SeriesId = @seriesId";
             SeriesItem seriesItem = new SeriesItem();
 
             string SERIES_ITEM_SELECT = @"SELECT se.SeriesId 
-, se.Title
-, ca.Id 'CreatorAuthorId'
+, se.Title AS 'SeriesTitle'
+, ca.Id AS 'CreatorAuthorId'
 , ca.FirstName
 , ca.LastName
-, si.Id 'SeriesItemId'
-, si.SeriesId
-, si.Title
+, si.Id AS 'SeriesItemId'
+, si.Title AS 'SeriesItemTitle'
 , si.Description
 , si.ProductionId
 , ps.ProductionStudioName
@@ -126,7 +117,7 @@ INNER JOIN SeriesItems si ON si.SeriesId = se.SeriesId
 INNER JOIN ProductionStudios ps ON ps.Id = si.ProductionId
 INNER JOIN Distributors di ON di.Id = si.DistributorId
 INNER JOIN Formats fo ON fo.FormatId = si.FormatId
-WHERE si.id = @seriesItemId";
+WHERE si.id = @ID";
 
             try
             {
@@ -135,12 +126,20 @@ WHERE si.id = @seriesItemId";
                     connection.Open();
 
                     SqlCommand sqlCommand = new SqlCommand(SERIES_ITEM_SELECT, connection);
-                    sqlCommand.Parameters.AddWithValue("@seriesItemId", seriesItemId);
-                    SqlDataReader reader = sqlCommand.ExecuteReader();
 
-                    while (reader.Read())
+                    // http://www.dbdelta.com/addwithvalue-is-evil/
+                    sqlCommand.Parameters.Add("@ID", SqlDbType.Int);
+                    sqlCommand.Parameters["@ID"].Value = seriesItemId;
+
+                    using (SqlDataReader reader = sqlCommand.ExecuteReader())
                     {
-                        seriesItem = MapRowToSeriesItem(reader);
+                        if (reader.HasRows)
+                        {
+                            while (reader.Read())
+                            {
+                                seriesItem = MapRowToSeriesItem(reader);
+                            }
+                        }
                     }
                 }
             }
@@ -230,11 +229,16 @@ WHERE si.id = @seriesItemId";
             {
                 Id = Convert.ToInt32(reader["SeriesItemId"]),
                 SeriesId = Convert.ToInt32(reader["SeriesId"]),
-                Title = Convert.ToString(reader["Title"]),
+                Title = Convert.ToString(reader["SeriesItemTitle"]),
                 Description = Convert.ToString(reader["Description"]),
+                Series = new Series()
+                {
+                    SeriesId = Convert.ToInt32(reader["SeriesId"]),
+                    Title = Convert.ToString(reader["SeriesTitle"])
+                },
                 ProductionStudio = new ProductionStudio
                 {
-                    Id = Convert.ToInt32(reader["ProductionStudioId"]),
+                    Id = Convert.ToInt32(reader["ProductionId"]),
                     ProductionStudioName = Convert.ToString(reader["ProductionStudioName"]),
                     // Country = Convert.ToString(reader["ProductionStudioCountry"])
                 },
@@ -245,10 +249,12 @@ WHERE si.id = @seriesItemId";
                     // Country = Convert.ToString(reader["DistributorCountry"])
                 },
                 // Length = Convert.ToString(reader["SeriesItemLength"]),
-                //CreatorAuthors = new List<CreatorAuthor>()
-                //{
-                    
-                //},
+                CreatorAuthors = new CreatorAuthor()
+                {
+                    Id = Convert.ToInt32(reader["CreatorAuthorId"]),
+                    FirstName = Convert.ToString(reader["FirstName"]),
+                    LastName = Convert.ToString(reader["LastName"])
+                },
                 Format = new Format
                 {
                     FormatId = Convert.ToInt32(reader["FormatId"]),
@@ -258,5 +264,26 @@ WHERE si.id = @seriesItemId";
             };
             return seriesItem;
         }
+
+        private readonly string GET_ALL_SERIES_SELECT_QUERY = @"SELECT se.SeriesId 
+, se.Title
+, ca.Id 'CreatorAuthorId'
+, ca.FirstName
+, ca.LastName
+, si.Id 'SeriesItemId'
+, si.SeriesId
+, si.Title
+, si.Description
+, si.ProductionId
+, si.DistributorId
+, si.CreatorAuthorId
+, si.Length
+, si.FormatId
+, si.ReleaseDate
+FROM Series se
+INNER JOIN SeriesCreators sc ON sc.SeriesId = se.SeriesId
+INNER JOIN CreatorAuthors ca ON ca.Id = sc.CreatorId
+INNER JOIN SeriesItems si ON si.SeriesId = se.SeriesId
+ORDER BY se.Title";
     }
 }

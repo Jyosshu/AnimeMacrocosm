@@ -7,7 +7,7 @@ namespace AnimeMacrocosm.Models
     public class ProductionStudio
     {
         [Key]
-        public int Id { get; set; }
+        public int ProductionStudioId { get; set; }
         public string ProductionStudioName { get; set; }
         public string Country { get; set; }
 

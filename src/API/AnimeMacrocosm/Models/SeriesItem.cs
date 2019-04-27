@@ -8,7 +8,7 @@ namespace AnimeMacrocosm.Models
     public class SeriesItem
     {
         [Key]
-        public int Id { get; set; }
+        public int SeriesItemId { get; set; }
 
         [ForeignKey("Series")]
         public int SeriesId { get; set; }

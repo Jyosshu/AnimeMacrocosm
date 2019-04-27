@@ -70,6 +70,7 @@ namespace AnimeMacrocosm
             IConfigurationRoot config = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", false, true)
+                .AddEnvironmentVariables()
                 .Build();
 
             serviceCollection.Configure<AppSettings>(config);

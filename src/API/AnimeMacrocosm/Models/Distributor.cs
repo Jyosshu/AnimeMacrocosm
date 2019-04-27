@@ -7,7 +7,7 @@ namespace AnimeMacrocosm.Models
     public class Distributor
     {
         [Key]
-        public int Id { get; set; }
+        public int DistributorId { get; set; }
         public string DistributorName { get; set; }
         public string Country { get; set; }
 

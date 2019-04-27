@@ -7,7 +7,7 @@ namespace AnimeMacrocosm.Models
     public class MediaType
     {
         [Key]
-        public int Id { get; set; }
+        public int MediaTypeId { get; set; }
         public string Description { get; set; }
     }
 }

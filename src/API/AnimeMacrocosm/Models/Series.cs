@@ -9,6 +9,8 @@ namespace AnimeMacrocosm.Models
         public int SeriesId { get; set; }
         public string Title { get; set; }
 
+        // TODO: Simplify Series SeriesId, Title.  Create a SeriesSeriesItem table.
+
         public List<SeriesCreator> SeriesCreators { get; set; }
 
         public List<SeriesItem> SeriesItems { get; set; }

@@ -194,7 +194,7 @@ WHERE si.id = @ID";
             {                 
                 CreatorAuthor = new CreatorAuthor
                 {
-                    Id = Convert.ToInt32(reader["CreatorAuthorId"]),
+                    CreatorAuthorId = Convert.ToInt32(reader["CreatorAuthorId"]),
                     FirstName = Convert.ToString(reader["FirstName"]),
                     LastName = Convert.ToString(reader["LastName"]),
                 }
@@ -227,7 +227,7 @@ WHERE si.id = @ID";
         {
             SeriesItem seriesItem = new SeriesItem
             {
-                Id = Convert.ToInt32(reader["SeriesItemId"]),
+                SeriesItemId = Convert.ToInt32(reader["SeriesItemId"]),
                 SeriesId = Convert.ToInt32(reader["SeriesId"]),
                 Title = Convert.ToString(reader["SeriesItemTitle"]),
                 Description = Convert.ToString(reader["Description"]),
@@ -238,20 +238,20 @@ WHERE si.id = @ID";
                 },
                 ProductionStudio = new ProductionStudio
                 {
-                    Id = Convert.ToInt32(reader["ProductionId"]),
+                    ProductionStudioId = Convert.ToInt32(reader["ProductionId"]),
                     ProductionStudioName = Convert.ToString(reader["ProductionStudioName"]),
                     // Country = Convert.ToString(reader["ProductionStudioCountry"])
                 },
                 Distributor = new Distributor
                 {
-                    Id = Convert.ToInt32(reader["DistributorId"]),
+                    DistributorId = Convert.ToInt32(reader["DistributorId"]),
                     DistributorName = Convert.ToString(reader["DistributorName"]),
                     // Country = Convert.ToString(reader["DistributorCountry"])
                 },
                 // Length = Convert.ToString(reader["SeriesItemLength"]),
                 CreatorAuthors = new CreatorAuthor()
                 {
-                    Id = Convert.ToInt32(reader["CreatorAuthorId"]),
+                    CreatorAuthorId = Convert.ToInt32(reader["CreatorAuthorId"]),
                     FirstName = Convert.ToString(reader["FirstName"]),
                     LastName = Convert.ToString(reader["LastName"])
                 },

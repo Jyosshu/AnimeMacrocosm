@@ -15,9 +15,6 @@ namespace AnimeMacrocosm.Models
         [MaxLength]
         public string PostContent { get; set; }
 
-        // TODO: UserId here, or maybe using a new UserPosts joined table?
-        //[ForeignKey("Users")]
-        //public int ApplicationUserRefId { get; set; }
         public User User { get; set; }
     }
 }

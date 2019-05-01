@@ -111,14 +111,13 @@ namespace AnimeMacrocosm.Repository
 
         private Post MapRowToPost(SqlDataReader reader)
         {
-            Post post = new Post()
+            Post post = new Post
             {
                 PostId = Convert.ToInt32(reader["PostId"]),
                 PostTitle = Convert.ToString(reader["PostTitle"]),
                 PostDate = DateTime.Parse(Convert.ToString(reader["PostDate"])),
                 PostContent = Convert.ToString(reader["PostContent"]),
-                //ApplicationUserRefId = Convert.ToInt32(reader["UserId"]),
-                User = new User()
+                User = new User
                 {
                     UserId = Convert.ToInt32(reader["UserId"]),
                     UserEmailAddress = Convert.ToString(reader["UserEmailAddress"]),
@@ -137,6 +136,7 @@ namespace AnimeMacrocosm.Repository
 , u.UserEmailAddress
 , u.UserScreenName
 FROM Posts p
-Inner Join Users u ON u.UserId = p.ApplicationUserRefId";
+INNER JOIN User_Posts up ON up.PostId = p.PostId
+INNER JOIN Users u ON u.UserId = up.UserId";
     }
 }

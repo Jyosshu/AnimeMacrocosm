@@ -185,40 +185,8 @@ WHERE si.id = @ID";
             Series tempSeries = new Series
             {
                 SeriesId = Convert.ToInt32(reader["SeriesId"]),
-                Title = Convert.ToString(reader["Title"]),
-                SeriesCreators = new List<SeriesCreator>(),
-                SeriesItems = new List<SeriesItem>()
+                Title = Convert.ToString(reader["Title"])
             };
-
-            SeriesCreator seriesCreator = new SeriesCreator
-            {                 
-                CreatorAuthor = new CreatorAuthor
-                {
-                    CreatorAuthorId = Convert.ToInt32(reader["CreatorAuthorId"]),
-                    FirstName = Convert.ToString(reader["FirstName"]),
-                    LastName = Convert.ToString(reader["LastName"]),
-                }
-            };
-
-            tempSeries.SeriesCreators.Add(seriesCreator);
-
-            // TODO: Add the objects to seriesItem for the associated IDs?
-            //SeriesItem seriesItem = new SeriesItem
-            //{
-            //    Id = Convert.ToInt32(reader["Id"]), // TODO: fill in this collumn
-            //    SeriesId = Convert.ToInt32("SeriesId"),
-            //    Title = Convert.ToString(reader["Title"]),
-            //    Description = Convert.ToString(reader["Description"]),
-            //    ProductionId = Convert.ToInt32(reader["ProductionId"]),
-            //    DistributorId = Convert.ToInt32(reader["DistrobutionId"]),
-            //    CreatorAuthorId = Convert.ToInt32(reader["CreatorAuthorId"]),
-            //    Length = Convert.ToString(reader["Length"]),
-            //    FormatId = Convert.ToInt32(reader["FormatId"]),
-            //    ReleaseDate = Convert.ToDateTime(reader["ReleaseDate"])
-            //};
-            SeriesItem seriesItem = MapRowToSeriesItem(reader);
-
-            tempSeries.SeriesItems.Add(seriesItem);
 
             return tempSeries;
         }
@@ -228,14 +196,9 @@ WHERE si.id = @ID";
             SeriesItem seriesItem = new SeriesItem
             {
                 SeriesItemId = Convert.ToInt32(reader["SeriesItemId"]),
-                SeriesId = Convert.ToInt32(reader["SeriesId"]),
+
                 Title = Convert.ToString(reader["SeriesItemTitle"]),
                 Description = Convert.ToString(reader["Description"]),
-                Series = new Series()
-                {
-                    SeriesId = Convert.ToInt32(reader["SeriesId"]),
-                    Title = Convert.ToString(reader["SeriesTitle"])
-                },
                 ProductionStudio = new ProductionStudio
                 {
                     ProductionStudioId = Convert.ToInt32(reader["ProductionId"]),
@@ -249,12 +212,6 @@ WHERE si.id = @ID";
                     // Country = Convert.ToString(reader["DistributorCountry"])
                 },
                 // Length = Convert.ToString(reader["SeriesItemLength"]),
-                CreatorAuthors = new CreatorAuthor()
-                {
-                    CreatorAuthorId = Convert.ToInt32(reader["CreatorAuthorId"]),
-                    FirstName = Convert.ToString(reader["FirstName"]),
-                    LastName = Convert.ToString(reader["LastName"])
-                },
                 Format = new Format
                 {
                     FormatId = Convert.ToInt32(reader["FormatId"]),
@@ -262,6 +219,15 @@ WHERE si.id = @ID";
                 },
                 // ReleaseDate = DateTime.Parse(Convert.ToString(reader["ReleaseDate"]))
             };
+
+            // TODO: build List<CreatorAuthors>()
+            //CreatorAuthors = new CreatorAuthor()
+            //{
+            //    CreatorAuthorId = Convert.ToInt32(reader["CreatorAuthorId"]),
+            //    FirstName = Convert.ToString(reader["FirstName"]),
+            //    LastName = Convert.ToString(reader["LastName"])
+            //},
+
             return seriesItem;
         }
 

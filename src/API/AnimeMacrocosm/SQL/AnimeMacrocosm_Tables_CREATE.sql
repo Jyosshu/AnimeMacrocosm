@@ -1,22 +1,5 @@
 BEGIN TRANSACTION;
 
-CREATE TABLE [AnimeItems] (
-    [SeriesItemId] int NOT NULL IDENTITY,
-    [SeriesId] int NOT NULL,
-    [Title] nvarchar(max) NULL,
-    [Description] nvarchar(max) NULL,
-    [ImageId] int NOT NULL,
-    [ProductionId] int NOT NULL,
-    [DistributorId] int NOT NULL,
-    [CreatorAuthorId] int NOT NULL,
-    [RunTime] nvarchar(max) NULL,
-    [FormatId] int NOT NULL,
-    [ReleaseDate] datetime2 NULL,
-    CONSTRAINT [PK_AnimeItems] PRIMARY KEY ([SeriesItemId])
-);
-
-GO
-
 CREATE TABLE [CreatorAuthors] (
     [CreatorAuthorId] int NOT NULL IDENTITY,
     [FirstName] nvarchar(max) NULL,
@@ -50,21 +33,6 @@ CREATE TABLE [Images] (
 
 GO
 
-CREATE TABLE [MangaItems] (
-    [SeriesItemId] int NOT NULL IDENTITY,
-    [SeriesId] int NOT NULL,
-    [Title] nvarchar(max) NULL,
-    [Description] nvarchar(max) NULL,
-    [ImageId] int NOT NULL,
-    [DistributorId] int NOT NULL,
-    [CreatorAuthorId] int NOT NULL,
-    [PageCount] int NOT NULL,
-    [ReleaseDate] datetime2 NOT NULL,
-    CONSTRAINT [PK_MangaItems] PRIMARY KEY ([SeriesItemId])
-);
-
-GO
-
 CREATE TABLE [MediaTypes] (
     [MediaTypeId] int NOT NULL IDENTITY,
     [MediaTypeName] nvarchar(max) NULL,
@@ -75,8 +43,7 @@ GO
 
 CREATE TABLE [Posts] (
     [PostId] int NOT NULL IDENTITY,
-    [PostTitle] nvarchar(100) NULL,
-    [PostCreator] nvarchar(30) NULL,
+    [PostTitle] nvarchar(100) NULL,    
     [PostDate] datetime2 NOT NULL,
     [PostContent] nvarchar(max) NULL,
     CONSTRAINT [PK_Posts] PRIMARY KEY ([PostId])
@@ -99,6 +66,18 @@ CREATE TABLE [Series] (
 );
 
 GO
+
+CREATE TABLE [SeriesItems] (
+    [SeriesItemId] int NOT NULL IDENTITY,    
+    [Title] nvarchar(max) NULL,
+    [Description] nvarchar(max) NULL,
+    [Length] nvarchar(100) NULL,
+    [FormatId] int NULL,
+    [ReleaseDate] datetime2 NULL,
+    CONSTRAINT [PK_AnimeItems] PRIMARY KEY ([SeriesItemId])
+);
+
+Go
 
 CREATE TABLE [Series_SeriesItems] (
 	[SeriesId] int NOT NULL,
@@ -134,7 +113,7 @@ CREATE TABLE [dbo].[SeriesItem_Images](
 ) ON [PRIMARY]
 GO
 
-CREATE TABLE [User] (
+CREATE TABLE [Users] (
     [UserId] int NOT NULL IDENTITY,
     [UserEmailAddress] nvarchar(max) NULL,
     [UserScreenName] nvarchar(max) NOT NULL,
@@ -143,7 +122,7 @@ CREATE TABLE [User] (
 
 GO
 
-CREATE TABLE [User_Posts] (
+CREATE TABLE [Users_Posts] (
 	[UserId] int NOT NULL,
 	[PostId] int NOT NULL,
 	CONSTRAINT [PK_User_Posts] PRIMARY KEY CLUSTERED

@@ -5,8 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using AnimeMacrocosm.Settings;
-using AnimeMacrocosm.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace AnimeMacrocosm
 {
@@ -26,6 +24,8 @@ namespace AnimeMacrocosm
         public void ConfigureServices(IServiceCollection services)
         {
             InitializeAppSettings(services);
+
+            // Cors added due to API and Client being on different ports for dev env
             services.AddCors(options =>
             {
                 options.AddPolicy(MyAllowSpecificOrigins, builder =>
@@ -36,8 +36,9 @@ namespace AnimeMacrocosm
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-           services.AddDbContext<ApplicationContext>
-                (options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            // Removed Migration manually
+           //services.AddDbContext<ApplicationContext>
+           //     (options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             IoC.RegisterDependencies(services);
         }
@@ -69,8 +70,7 @@ namespace AnimeMacrocosm
         {
             IConfigurationRoot config = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", false, true)
-                .AddEnvironmentVariables()
+                .AddJsonFile("appsettings.json", false, true)                
                 .Build();
 
             serviceCollection.Configure<AppSettings>(config);

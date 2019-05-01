@@ -136,7 +136,7 @@ namespace AnimeMacrocosm.Repository
 , u.UserEmailAddress
 , u.UserScreenName
 FROM Posts p
-INNER JOIN User_Posts up ON up.PostId = p.PostId
+INNER JOIN Users_Posts up ON up.PostId = p.PostId
 INNER JOIN Users u ON u.UserId = up.UserId";
     }
 }

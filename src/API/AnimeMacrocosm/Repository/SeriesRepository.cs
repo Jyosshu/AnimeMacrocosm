@@ -28,7 +28,7 @@ namespace AnimeMacrocosm.Repository
                 {
                     connection.Open();
 
-                    SqlCommand sqlCommand = new SqlCommand(GET_ALL_SERIES_SELECT_QUERY, connection);
+                    SqlCommand sqlCommand = new SqlCommand("SELECT SeriesId, Title FROM Series ORDER BY Title Asc", connection);
 
                     using (SqlDataReader reader = sqlCommand.ExecuteReader())
                     {
@@ -230,26 +230,5 @@ WHERE si.id = @ID";
 
             return seriesItem;
         }
-
-        private readonly string GET_ALL_SERIES_SELECT_QUERY = @"SELECT se.SeriesId 
-, se.Title
-, ca.Id 'CreatorAuthorId'
-, ca.FirstName
-, ca.LastName
-, si.Id 'SeriesItemId'
-, si.SeriesId
-, si.Title
-, si.Description
-, si.ProductionId
-, si.DistributorId
-, si.CreatorAuthorId
-, si.Length
-, si.FormatId
-, si.ReleaseDate
-FROM Series se
-INNER JOIN SeriesCreators sc ON sc.SeriesId = se.SeriesId
-INNER JOIN CreatorAuthors ca ON ca.Id = sc.CreatorId
-INNER JOIN SeriesItems si ON si.SeriesId = se.SeriesId
-ORDER BY se.Title";
     }
 }

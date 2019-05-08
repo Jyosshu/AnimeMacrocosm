@@ -17,6 +17,14 @@ CREATE TABLE [Distributors] (
 
 GO
 
+CREATE TABLE [Formats] (
+    [FormatId] int NOT NULL IDENTITY,
+    [FormatName] nvarchar(max) NULL,
+    CONSTRAINT [PK_Formats] PRIMARY KEY ([FormatId])
+);
+
+GO
+
 CREATE TABLE [Genres] (
     [GenreId] int NOT NULL IDENTITY,
     [GenreType] nvarchar(max) NULL,
@@ -86,6 +94,30 @@ CREATE TABLE [Series_SeriesItems] (
 	(
 		[SeriesId] ASC,
 		[SeriesItemId] ASC
+	)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+CREATE TABLE [SeriesItem_Production] (
+	[SeriesItemId] int NOT NULL,
+	[ProductionStudioId] int NOT NULL,
+	CONSTRAINT [PK_SeriesItem_Production] PRIMARY KEY CLUSTERED
+	(
+		[SeriesItemId] ASC,
+		[ProductionStudioId] ASC
+	)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+CREATE TABLE [SeriesItem_Distrobution] (
+	[SeriesItemId] int NOT NULL,
+	[DistributorId] int NOT NULL,
+	CONSTRAINT [PK_SeriesItem_Distrobution] PRIMARY KEY CLUSTERED
+	(
+		[SeriesItemId] ASC,
+		[DistributorId] ASC
 	)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 

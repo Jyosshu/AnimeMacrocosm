@@ -6,7 +6,7 @@ namespace AnimeMacrocosm.Interface
     public interface ISeriesRepository
     {
         List<Series> GetAllSeries();
-        Series GetSeriesById(int seriesId);
+        SeriesSummary GetSeriesById(int seriesId);
         // List<Series> GetSeriesByGenre(int genreId);
         SeriesItem GetSeriesItemById(int seriesItemId);
     }

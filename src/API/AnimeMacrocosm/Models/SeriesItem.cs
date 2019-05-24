@@ -13,11 +13,11 @@ namespace AnimeMacrocosm.Models
         
         public List<Image> SeriesItemImages { get; set; }
 
-        public ProductionStudio ProductionStudio { get; set; }
+        public List<ProductionStudio> ProductionStudios { get; set; }
                 
-        public Distributor Distributor { get; set; } // TODO: List?
+        public List<Distributor> Distributors { get; set; } // TODO: List?
 
-        public List<CreatorAuthor> CreatorAuthors { get; set; }
+        public CreatorAuthor CreatorAuthor { get; set; }
 
         public string Length { get; set; }
                 

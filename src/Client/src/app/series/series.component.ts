@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Series } from '../models/series.model';
+// import { SeriesSummary } from '../models/seriesSummary.model';
 import { SeriesService } from '../series/series.service';
 
 @Component({
@@ -20,4 +21,6 @@ export class SeriesComponent implements OnInit {
   getSeries(): void {
     this.seriesService.getAllSeries().subscribe(series => this.series = series);
   }
+ 
+  
 }

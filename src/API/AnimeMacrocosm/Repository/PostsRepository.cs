@@ -6,16 +6,38 @@ using AnimeMacrocosm.Interface;
 using AnimeMacrocosm.Models;
 using AnimeMacrocosm.Settings;
 using Microsoft.Extensions.Options;
+using Npgsql;
+using Dapper;
+using System.Runtime.InteropServices;
 
 namespace AnimeMacrocosm.Repository
 {
     public class PostsRepository : IPostRepository
     {
         private readonly AppSettings _appSettings;
+        private bool isWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
 
         public PostsRepository(IOptionsSnapshot<AppSettings> appSettings)
         {
             _appSettings = appSettings.Value;
+        }
+
+        public IDbConnection OpenConnection()
+        {
+            IDbConnection connection;
+
+            if (isWindows == true)
+            {
+                connection = new SqlConnection(_appSettings.ConnectionStrings.DefaultConnection);
+            }
+            else
+            {
+                connection = new NpgsqlConnection(_appSettings.ConnectionStrings.PostgresConnection);
+            }
+
+            connection.Open();
+
+            return connection;
         }
 
         public List<Post> GetAllPosts()
@@ -24,22 +46,9 @@ namespace AnimeMacrocosm.Repository
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(_appSettings.ConnectionStrings.DefaultConnection))
+                using (var connection = OpenConnection())
                 {
-                    connection.Open();
-
-                    SqlCommand sqlCommand = new SqlCommand($"{GET_ALL_POST_SELECT_QUERY} Order By p.PostDate DESC", connection);
-
-                    using (SqlDataReader reader = sqlCommand.ExecuteReader())
-                    {
-                        if (reader.HasRows)
-                        {
-                            while (reader.Read())
-                            {
-                                posts.Add(MapRowToPost(reader));
-                            }
-                        }
-                    }
+                    posts = connection.Query<Post>(GET_ALL_POST_SELECT_QUERY + "Order By p.PostDate DESC").AsList();
                 }
             }
             catch (Exception ex)
@@ -56,24 +65,24 @@ namespace AnimeMacrocosm.Repository
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(_appSettings.ConnectionStrings.DefaultConnection))
+                using (var connection = OpenConnection())
                 {
-                    connection.Open();
+                    post = connection.QueryFirst<Post>(GET_ALL_POST_SELECT_QUERY + "WHERE PostId = @PostId", new { PostId = postId});
 
-                    SqlCommand sqlCommand = new SqlCommand($"{GET_ALL_POST_SELECT_QUERY} WHERE PostId = @postId", connection);
-                    sqlCommand.Parameters.Add("@postId", SqlDbType.Int);
-                    sqlCommand.Parameters["@postId"].Value = postId;
+                    //SqlCommand sqlCommand = new SqlCommand($"{GET_ALL_POST_SELECT_QUERY} WHERE PostId = @postId", connection);
+                    //sqlCommand.Parameters.Add("@postId", SqlDbType.Int);
+                    //sqlCommand.Parameters["@postId"].Value = postId;
 
-                    using (SqlDataReader reader = sqlCommand.ExecuteReader())
-                    {
-                        if (reader.HasRows)
-                        {
-                            while (reader.Read())
-                            {
-                                post = MapRowToPost(reader);
-                            }
-                        }
-                    }
+                    //using (SqlDataReader reader = sqlCommand.ExecuteReader())
+                    //{
+                    //    if (reader.HasRows)
+                    //    {
+                    //        while (reader.Read())
+                    //        {
+                    //            post = MapRowToPost(reader);
+                    //        }
+                    //    }
+                    //}
                 }
             }
             catch (Exception ex)
@@ -87,45 +96,26 @@ namespace AnimeMacrocosm.Repository
         {
             List<Post> posts = new List<Post>();
 
-            using (SqlConnection connection = new SqlConnection(_appSettings.ConnectionStrings.DefaultConnection))
+            using (var connection = OpenConnection())
             {
-                connection.Open();
+                posts = connection.Query<Post>(GET_ALL_POST_SELECT_QUERY + "WHERE u.UserId = @UserId Order By p.PostDate DESC", new { UserId = userId }).AsList();
 
-                SqlCommand sqlCommand = new SqlCommand($"{GET_ALL_POST_SELECT_QUERY} Where u.UserId = @userId Order By p.PostDate DESC", connection);
-                sqlCommand.Parameters.AddWithValue("@userId", userId);
+                //SqlCommand sqlCommand = new SqlCommand($"{GET_ALL_POST_SELECT_QUERY} Where u.UserId = @userId Order By p.PostDate DESC", connection);
+                //sqlCommand.Parameters.AddWithValue("@userId", userId);
 
-                using (SqlDataReader reader = sqlCommand.ExecuteReader())
-                {
-                    if (reader.HasRows)
-                    {
-                        while (reader.Read())
-                        {
-                            posts.Add(MapRowToPost(reader));
-                        }
-                    }
-                }
+                //using (SqlDataReader reader = sqlCommand.ExecuteReader())
+                //{
+                //    if (reader.HasRows)
+                //    {
+                //        while (reader.Read())
+                //        {
+                //            posts.Add(MapRowToPost(reader));
+                //        }
+                //    }
+                //}
             }
 
                 return posts;
-        }
-
-        private Post MapRowToPost(SqlDataReader reader)
-        {
-            Post post = new Post
-            {
-                PostId = Convert.ToInt32(reader["PostId"]),
-                PostTitle = Convert.ToString(reader["PostTitle"]),
-                PostDate = DateTime.Parse(Convert.ToString(reader["PostDate"])),
-                PostContent = Convert.ToString(reader["PostContent"]),
-                User = new User
-                {
-                    UserId = Convert.ToInt32(reader["UserId"]),
-                    UserEmailAddress = Convert.ToString(reader["UserEmailAddress"]),
-                    UserScreenName = Convert.ToString(reader["UserScreenName"])
-                }
-            };
-
-            return post;
         }
 
         private readonly string GET_ALL_POST_SELECT_QUERY = @"SELECT p.PostId
@@ -136,7 +126,6 @@ namespace AnimeMacrocosm.Repository
 , u.UserEmailAddress
 , u.UserScreenName
 FROM Posts p
-INNER JOIN Users_Posts up ON up.PostId = p.PostId
-INNER JOIN Users u ON u.UserId = up.UserId";
+INNER JOIN Users u ON u.UserId = p.UserId";
     }
 }

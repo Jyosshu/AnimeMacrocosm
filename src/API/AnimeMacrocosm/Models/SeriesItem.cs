@@ -15,9 +15,9 @@ namespace AnimeMacrocosm.Models
 
         public List<ProductionStudio> ProductionStudios { get; set; }
                 
-        public List<Distributor> Distributors { get; set; } // TODO: List?
+        public List<Distributor> Distributors { get; set; }
 
-        public CreatorAuthor CreatorAuthor { get; set; }
+        public List<CreatorAuthor> CreatorAuthors { get; set; }
 
         public string Length { get; set; }
                 

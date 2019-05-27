@@ -6,16 +6,38 @@ using AnimeMacrocosm.Interface;
 using AnimeMacrocosm.Models;
 using AnimeMacrocosm.Settings;
 using Microsoft.Extensions.Options;
+using Npgsql;
+using Dapper;
+using System.Runtime.InteropServices;
 
 namespace AnimeMacrocosm.Repository
 {
     public class SeriesRepository : ISeriesRepository
     {
         private readonly AppSettings _appSettings;
+        private bool isWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
 
         public SeriesRepository(IOptionsSnapshot<AppSettings> appSettings)
         {
             _appSettings = appSettings.Value;
+        }
+
+        public IDbConnection OpenConnection()
+        {
+            IDbConnection connection;
+
+            if (isWindows == true)
+            {
+                connection = new SqlConnection(_appSettings.ConnectionStrings.DefaultConnection);
+            } 
+            else
+            {
+                connection = new NpgsqlConnection(_appSettings.ConnectionStrings.PostgresConnection);
+            }
+
+            connection.Open();
+
+            return connection;
         }
 
         public List<Series> GetAllSeries()
@@ -24,22 +46,10 @@ namespace AnimeMacrocosm.Repository
             
             try
             {
-                using (SqlConnection connection = new SqlConnection(_appSettings.ConnectionStrings.DefaultConnection))
+                using (var connection = OpenConnection())
                 {
-                    connection.Open();
-
-                    SqlCommand sqlCommand = new SqlCommand("SELECT SeriesId, Title FROM Series ORDER BY Title ASC", connection);
-
-                    using (SqlDataReader reader = sqlCommand.ExecuteReader())
-                    {
-                        if (reader.HasRows)
-                        {
-                            while (reader.Read())
-                            {
-                                series.Add(MapRowToSeries(reader));
-                            }
-                        }
-                    }
+                    string getAllQuery = "SELECT SeriesId, Title FROM Series ORDER BY Title ASC";
+                    series = connection.Query<Series>(getAllQuery).AsList();
                 }
             }
             catch (Exception ex)
@@ -54,29 +64,14 @@ namespace AnimeMacrocosm.Repository
         {
             SeriesSummary seriesSummary = new SeriesSummary();
 
-            string SERIES_BY_ID_SELECT = "SELECT se.SeriesId, se.Title FROM Series se WHERE se.SeriesId = @seriesId";
+            string SERIES_BY_ID_SELECT = "SELECT se.SeriesId, se.Title FROM Series se WHERE se.SeriesId = @SeriesId";
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(_appSettings.ConnectionStrings.DefaultConnection))
+                using (var connection = OpenConnection())
                 {
-                    connection.Open();
+                    seriesSummary = connection.QueryFirst<SeriesSummary>(SERIES_BY_ID_SELECT, new { SeriesId = seriesId});
 
-                    SqlCommand sqlCommand = new SqlCommand(SERIES_BY_ID_SELECT, connection);
-                    sqlCommand.Parameters.Add("@seriesId", SqlDbType.Int);
-                    sqlCommand.Parameters["@seriesId"].Value = seriesId;
-
-                    using (SqlDataReader reader = sqlCommand.ExecuteReader())
-                    {
-                        if (reader.HasRows)
-                        {
-                            while (reader.Read())
-                            {
-                                seriesSummary.SeriesId = Convert.ToInt32(reader["SeriesId"]);
-                                seriesSummary.Title = Convert.ToString(reader["Title"]);
-                            }
-                        }
-                    }
                     if (seriesSummary.SeriesId != 0 && seriesSummary.Title != null)
                     {
                         seriesSummary.SeriesItems = GetSeriesItemBySeriesId(seriesId);
@@ -100,44 +95,30 @@ namespace AnimeMacrocosm.Repository
 , si.Title
 , si.Description
 , si.FormatId
-, ca.CreatorAuthorId
-, ca.FirstName
-, ca.LastName
-, ca.FirstName_English
-, ca.LastName_English
-, ca.CountryOfOrigin
 , fo.FormatName
 FROM SeriesItems si
 INNER JOIN Series_Creators sc ON sc.SeriesId = si.SeriesId
 INNER JOIN CreatorAuthors ca ON ca.CreatorAuthorId = sc.CreatorAuthorId
 INNER JOIN Formats fo ON fo.FormatId = si.FormatId
-WHERE si.SeriesId = @seriesId";
+WHERE si.SeriesId = @SeriesId";
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(_appSettings.ConnectionStrings.DefaultConnection))
+                using (var connection = OpenConnection())
                 {
-                    connection.Open();
-
-                    SqlCommand sqlCommand = new SqlCommand(SERIES_ITEM_BY_SERIES_ID_SELECT, connection);
-                    sqlCommand.Parameters.Add("@seriesId", SqlDbType.Int);
-                    sqlCommand.Parameters["@seriesId"].Value = seriesId;
-
-                    using (SqlDataReader reader = sqlCommand.ExecuteReader())
-                    {
-                        if (reader.HasRows)
-                        {
-                            while (reader.Read())
-                            {
-                                seriesItemCollection.Add(MapRowToSeriesItem(reader));
-                            }
-                        }
-                    }
+                    seriesItemCollection = connection.Query<SeriesItem, Format>(SERIES_ITEM_BY_SERIES_ID_SELECT, 
+                        map: (seriesItem, format ) =>
+                       {
+                            seriesItem.Format = format;
+                            return seriesItem;
+                        },
+                        param: new { SeriesId = seriesId }).ToList();
 
                     foreach (SeriesItem seriesItem in seriesItemCollection)
                     {
                         if (seriesItem != null)
                         {
+                            seriesItem.CreatorAuthors = GetCreatorAuthorsBySeriesItemId(seriesItem.SeriesItemId);
                             seriesItem.ProductionStudios = GetProductionStudiosBySeriesItemId(seriesItem.SeriesItemId);
                             seriesItem.Distributors = GetDistributorsBySeriesItemId(seriesItem.SeriesItemId);                            
                         }
@@ -183,26 +164,9 @@ WHERE si.SeriesItemId = @ID";
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(_appSettings.ConnectionStrings.DefaultConnection))
+                using (var connection = OpenConnection())
                 {
-                    connection.Open();
-
-                    SqlCommand sqlCommand = new SqlCommand(SERIES_ITEM_SELECT, connection);
-
-                    // http://www.dbdelta.com/addwithvalue-is-evil/
-                    sqlCommand.Parameters.Add("@ID", SqlDbType.Int);
-                    sqlCommand.Parameters["@ID"].Value = seriesItemId;
-
-                    using (SqlDataReader reader = sqlCommand.ExecuteReader())
-                    {
-                        if (reader.HasRows)
-                        {
-                            while (reader.Read())
-                            {
-                                seriesItem = MapRowToSeriesItem(reader);
-                            }
-                        }
-                    }
+                    seriesItem = connection.QueryFirstOrDefault<SeriesItem>(SERIES_ITEM_SELECT, new { ID = seriesItem });
                 }
             }
             catch (Exception ex)
@@ -225,28 +189,13 @@ WHERE si.SeriesItemId = @ID";
 , CountryOfOrigin
 FROM CreatorAuthors ca
 INNER JOIN Series_Creators sc ON sc.CreatorAuthorId = ca.CreatorAuthorId
-WHERE sc.SeriesId = @seriesId";
+WHERE sc.SeriesId = @SeriesId";
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(_appSettings.ConnectionStrings.DefaultConnection))
+                using (var connection = OpenConnection())
                 {
-                    connection.Open();
-
-                    SqlCommand sqlCommand = new SqlCommand(CREATOR_AUTHOR_BY_SERIES_ID, connection);
-                    sqlCommand.Parameters.Add("@seriesId", SqlDbType.Int);
-                    sqlCommand.Parameters["@seriesId"].Value = seriesId;
-
-                    using (SqlDataReader reader = sqlCommand.ExecuteReader())
-                    {
-                        if (reader.HasRows)
-                        {
-                            while (reader.Read())
-                            {
-                                creatorAuthorsCollection.Add(MapRowToCreatorAuthor(reader));
-                            }
-                        }
-                    }
+                    creatorAuthorsCollection =  connection.Query<CreatorAuthor>(CREATOR_AUTHOR_BY_SERIES_ID, new { SeriesId = seriesId }).AsList();
                 }
             }
             catch (SqlException se)
@@ -262,28 +211,22 @@ WHERE sc.SeriesId = @seriesId";
         {
             List<CreatorAuthor> creatorAuthorsCollection = new List<CreatorAuthor>();
 
-            string CREATOR_AUTHOR_BY_SERIES_ID = "";
+            string CREATOR_AUTHOR_BY_SERIES_ID = @"SELECT ca.CreatorAuthorId
+, ca.FirstName
+, ca.LastName
+, ca.FirstName_English
+, ca.LastName_English
+, ca.CountryOfOrigin
+FROM CreatorAuthors ca
+INNER JOIN Series_Creators sc ON sc.CreatorAuthorId = ca.CreatorAuthorId
+INNER JOIN SeriesItems si ON si.seriesId = sc.seriesId
+WHERE si.SeriesItemId = @SeriesItemId";
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(_appSettings.ConnectionStrings.DefaultConnection))
+                using (var connection = OpenConnection())
                 {
-                    connection.Open();
-
-                    SqlCommand sqlCommand = new SqlCommand(CREATOR_AUTHOR_BY_SERIES_ID, connection);
-                    sqlCommand.Parameters.Add("@seriesItemId", SqlDbType.Int);
-                    sqlCommand.Parameters["@seriesItemId"].Value = seriesItemId;
-
-                    using (SqlDataReader reader = sqlCommand.ExecuteReader())
-                    {
-                        if (reader.HasRows)
-                        {
-                            while (reader.Read())
-                            {
-                                creatorAuthorsCollection.Add(MapRowToCreatorAuthor(reader));
-                            }
-                        }
-                    }
+                    creatorAuthorsCollection = connection.Query<CreatorAuthor>(CREATOR_AUTHOR_BY_SERIES_ID, new { SeriesItemId = seriesItemId }).AsList();
                 }
             }
             catch (SqlException se)
@@ -303,28 +246,13 @@ WHERE sc.SeriesId = @seriesId";
 , ps.WebsiteURL
 FROM ProductionStudios ps
 INNER JOIN SeriesItem_Production sips ON sips.ProductionStudioId = ps.ProductionStudioId
-WHERE sips.SeriesItemId = @seriesItemId";
+WHERE sips.SeriesItemId = @SeriesItemId";
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(_appSettings.ConnectionStrings.DefaultConnection))
+                using (var connection = OpenConnection())
                 {
-                    connection.Open();
-
-                    SqlCommand sqlCommand = new SqlCommand(PRODUCTION_STUDIOS_BY_SERIESITEM_ID, connection);
-                    sqlCommand.Parameters.Add("@seriesItemId", SqlDbType.Int);
-                    sqlCommand.Parameters["@seriesItemId"].Value = seriesItemId;
-
-                    using (SqlDataReader reader = sqlCommand.ExecuteReader())
-                    {
-                        if (reader.HasRows)
-                        {
-                            while (reader.Read())
-                            {
-                                productionStudioCollection.Add(MapRowToProductionStudio(reader));
-                            }
-                        }
-                    }
+                    productionStudioCollection = connection.Query<ProductionStudio>(PRODUCTION_STUDIOS_BY_SERIESITEM_ID, new { SeriesItemId = seriesItemId }).AsList();
                 }
             }
             catch (SqlException se)
@@ -344,28 +272,13 @@ WHERE sips.SeriesItemId = @seriesItemId";
 , di.WebsiteURL
 FROM Distributors di
 INNER JOIN SeriesItem_Distributor sidi ON sidi.DistributorId = di.DistributorId
-WHERE sidi.SeriesItemId = @seriesItemId";
+WHERE sidi.SeriesItemId = @SeriesItemId";
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(_appSettings.ConnectionStrings.DefaultConnection))
+                using (var connection = OpenConnection())
                 {
-                    connection.Open();
-
-                    SqlCommand sqlCommand = new SqlCommand(DISTRIBUTORS_BY_SERIESITEM_ID, connection);
-                    sqlCommand.Parameters.Add("@seriesItemId", SqlDbType.Int);
-                    sqlCommand.Parameters["@seriesItemId"].Value = seriesItemId;
-
-                    using (SqlDataReader reader = sqlCommand.ExecuteReader())
-                    {
-                        if (reader.HasRows)
-                        {
-                            while (reader.Read())
-                            {
-                                distributorCollection.Add(MapRowToDistributor(reader));
-                            }
-                        }
-                    }
+                    distributorCollection = connection.Query<Distributor>(DISTRIBUTORS_BY_SERIESITEM_ID, new { SeriesItemId = seriesItemId }).AsList();
                 }
             }
             catch (SqlException se)
@@ -374,129 +287,6 @@ WHERE sidi.SeriesItemId = @seriesItemId";
             }
 
             return distributorCollection;
-        }
-
-        private Series MapRowToSeries(SqlDataReader reader)
-        {
-            Series tempSeries = new Series
-            {
-                SeriesId = Convert.ToInt32(reader["SeriesId"]),
-                Title = Convert.ToString(reader["Title"])
-            };
-
-            return tempSeries;
-        }
-
-        private SeriesSummary MapRowToSeriesSummary(SqlDataReader reader)
-        {
-            SeriesSummary summary = new SeriesSummary
-            {
-                SeriesId = Convert.ToInt32(reader["SeriesId"]),
-                Title = Convert.ToString(reader["Title"]),
-                SeriesItems = new List<SeriesItem>()
-            };
-
-            //while (reader.HasRows)
-            //{
-            //    SeriesItem seriesItem = new SeriesItem
-            //    {
-            //        SeriesItemId = Convert.ToInt32(reader["SeriesItemId"]),
-
-            //        Title = Convert.ToString(reader["SeriesItemTitle"]),
-            //        Description = Convert.ToString(reader["Description"]),
-            //        CreatorAuthor = new CreatorAuthor()
-            //        {
-            //            CreatorAuthorId = Convert.ToInt32(reader["CreatorAuthorId"]),
-            //            FirstName = Convert.ToString(reader["FirstName"]),
-            //            LastName = Convert.ToString(reader["LastName"]),
-            //            FirstName_English = Convert.ToString(reader["FirstName_English"]),
-            //            LastName_English = Convert.ToString(reader["LastName_English"])
-            //        },
-            //        // Length = Convert.ToString(reader["SeriesItemLength"]),
-            //        Format = new Format
-            //        {
-            //            FormatId = Convert.ToInt32(reader["FormatId"]),
-            //            FormatName = Convert.ToString(reader["FormatName"])
-            //        },
-            //        // ReleaseDate = DateTime.Parse(Convert.ToString(reader["ReleaseDate"]))
-            //    };
-
-            //    summary.SeriesItems.Add(seriesItem);
-            //}
-
-
-            return summary;
-        }
-
-        private SeriesItem MapRowToSeriesItem(SqlDataReader reader)
-        {
-            SeriesItem seriesItem = new SeriesItem
-            {
-                SeriesItemId = Convert.ToInt32(reader["SeriesItemId"]),
-
-                Title = Convert.ToString(reader["Title"]),
-                Description = Convert.ToString(reader["Description"]),
-
-                CreatorAuthor = new CreatorAuthor()
-                {
-                    CreatorAuthorId = Convert.ToInt32(reader["CreatorAuthorId"]),
-                    FirstName_English = Convert.ToString(reader["FirstName_English"]),
-                    LastName_English = Convert.ToString(reader["LastName_English"]),
-                    FirstName = Convert.ToString(reader["FirstName"]),
-                    LastName = Convert.ToString(reader["LastName"]),
-                    ContryOfOrigin = Convert.ToString(reader["CountryOfOrigin"])
-                },
-                // Length = Convert.ToString(reader["SeriesItemLength"]),
-                Format = new Format
-                {
-                    FormatId = Convert.ToInt32(reader["FormatId"]),
-                    FormatName = Convert.ToString(reader["FormatName"])
-                },
-                // ReleaseDate = DateTime.Parse(Convert.ToString(reader["ReleaseDate"]))
-            };
-
-            return seriesItem;
-        }
-
-        private CreatorAuthor MapRowToCreatorAuthor(SqlDataReader reader)
-        {
-            CreatorAuthor creatorAuthor = new CreatorAuthor
-            {
-                CreatorAuthorId = Convert.ToInt32(reader["CreatorAuthorId"]),
-                FirstName_English = Convert.ToString(reader["FirstName_English"]),
-                LastName_English = Convert.ToString(reader["LastName_English"]),
-                FirstName = Convert.ToString(reader["FirstName"]),
-                LastName = Convert.ToString(reader["LastName"]),
-                ContryOfOrigin = Convert.ToString(reader["CountryOfOrigin"])
-            };
-
-            return creatorAuthor; 
-        }
-
-        private ProductionStudio MapRowToProductionStudio(SqlDataReader reader)
-        {
-            ProductionStudio productionStudio = new ProductionStudio
-            {
-                ProductionStudioId = Convert.ToInt32(reader["ProductionStudioId"]),
-                ProductionStudioName = Convert.ToString(reader["ProductionStudioName"]),
-                CountryOfOrigin = Convert.ToString(reader["CountryOfOrigin"]),
-                WebsiteURL = Convert.ToString(reader["WebsiteURL"])
-            };
-
-            return productionStudio;
-        }
-
-        private Distributor MapRowToDistributor(SqlDataReader reader)
-        {
-            Distributor distributor = new Distributor
-            {
-                DistributorId = Convert.ToInt32(reader["DistributorId"]),
-                DistributorName = Convert.ToString(reader["DistributorName"]),
-                CountryOfOrigin = Convert.ToString(reader["CountryOfOrigin"]),
-                WebsiteURL = Convert.ToString(reader["WebsiteURL"])
-            };
-
-            return distributor;
         }
     }
 }

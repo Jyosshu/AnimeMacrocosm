@@ -10,7 +10,7 @@ export class SeriesItem {
         public description: string = '',
         public productionStudios: ProductionStudio[],
         public distributors: Distributor[],
-        public creatorAuthor: CreatorAuthor = new CreatorAuthor(),
+        public creatorAuthors: CreatorAuthor[],
         public length: string = '',
         public format: Format = new Format(),
         public releaseDate: Date = null,

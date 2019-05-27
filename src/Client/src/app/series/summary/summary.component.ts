@@ -24,4 +24,8 @@ export class SummaryComponent implements OnInit {
   getSeriesSummary(id): void {
     this.seriesService.getSeriesById(id).subscribe(seriesSummary => this.seriesSummary = seriesSummary);
   }
+
+  toArray(seriesSummary: object) {
+    return Object.keys(seriesSummary).map(key => seriesSummary[key])
+  }
 }

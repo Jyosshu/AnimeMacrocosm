@@ -2,26 +2,34 @@
   <h3>{{seriesSummary.title}}</h3>
 
   <div>
-    <ul style="list-style-type:none;">
+    <ul>
       <li *ngFor="let item of seriesSummary.seriesItems">
-        <a routerLink="detail/{{item.seriesItemId}}">{{item.title}}</a>
+        <div class="container">
+          <div class="left-image">
+            <img src="" title="TEMP IMAGE" />
+          </div>
+          <div class="right-info">
+            <a routerLink="detail/{{item.seriesItemId}}">{{item.title}}</a> <br />
+
+            <strong>Creator:</strong> <br />
+            <div *ngFor="let creatorAuthor of item.creatorAuthors">
+              {{creatorAuthor.firstName_English}} {{creatorAuthor.lastName_English}} ( {{creatorAuthor.lastName}}
+              {{creatorAuthor.firstName}} )<br />
+            </div>
+            <strong>Production Studio:</strong> <br />
+            <div *ngFor="let productionStudio of item.productionStudios">
+              {{productionStudio.productionStudioName}} <a href="{{productionStudio.websiteURL}}"
+                *ngIf="productionStudio.websiteURL">{{productionStudio.websiteURL}}</a>
+            </div>
+            <strong>Distributor:</strong><br />
+            <div *ngFor="let distributor of item.distributors">
+              {{distributor.distributorName}} <a href="{{distributor.websiteURL}}"
+                *ngIf="distributor.websiteURL">{{distributor.websiteURL}}</a>
+            </div>
+            <strong>Format:</strong> {{item.format.formatName}} <br />
+          </div>
+        </div>
         <p>{{item.description}}</p>
-        <strong>Creator:</strong> <br />
-        <div *ngFor="let creatorAuthor of item.creatorAuthors">
-          {{creatorAuthor.firstName_English}} {{creatorAuthor.lastName_English}} ( {{creatorAuthor.lastName}}
-          {{creatorAuthor.firstName}} )<br />
-        </div>
-        <strong>Production Studio:</strong> <br />
-        <div *ngFor="let productionStudio of item.productionStudios">
-          {{productionStudio.productionStudioName}} <a href="{{productionStudio.websiteURL}}"
-            *ngIf="productionStudio.websiteURL">{{productionStudio.websiteURL}}</a>
-        </div>
-        <strong>Distributor:</strong><br />
-        <div *ngFor="let distributor of item.distributors">
-          {{distributor.distributorName}} <a href="{{distributor.websiteURL}}"
-            *ngIf="distributor.websiteURL">{{distributor.websiteURL}}</a>
-        </div>
-        <strong>Format:</strong> {{item.format.formatName}} <br /><br />
       </li>
     </ul>
   </div>

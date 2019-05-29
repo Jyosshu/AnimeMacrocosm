@@ -1,6 +1,9 @@
-<h3>Posts:</h3>
+<div class="post-container">
+  <h3>Posts:</h3>
 
-<div *ngFor="let post of posts">
-  <h4>{{ post.postTitle }} | {{ post.postDate }} | <a href="mailto:{{post.user.userEmailAddress}}">{{ post.user.userScreenName }}</a></h4>
-  <p>{{ post.postContent }}</p>
+  <div *ngFor="let post of posts">
+    <h4>{{ post.postTitle }} | {{ post.postDate }} | <a
+        href="mailto:{{post.user.userEmailAddress}}">{{ post.user.userScreenName }}</a></h4>
+    <p>{{ post.postContent }}</p>
+  </div>
 </div>

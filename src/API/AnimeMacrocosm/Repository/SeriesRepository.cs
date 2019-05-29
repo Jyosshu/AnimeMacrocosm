@@ -106,13 +106,14 @@ WHERE si.SeriesId = @SeriesId";
             {
                 using (var connection = OpenConnection())
                 { // TODO: Fix GetSeriesItemBySeriesId
-                    //seriesItemCollection = connection.Query<SeriesItem, Format>(SERIES_ITEM_BY_SERIES_ID_SELECT, 
-                       // map: (seriesItem, format ) =>
-                       //{
-                        //    seriesItem.Format = format;
-                        //    return seriesItem;
-                        //},
-                        //param: new { SeriesId = seriesId }).ToList();
+                    seriesItemCollection = connection.Query<SeriesItem, Format, SeriesItem>(SERIES_ITEM_BY_SERIES_ID_SELECT,
+                        map: (seriesItem, format) =>
+                       {
+                           seriesItem.Format = format;
+                           return seriesItem;
+                       },
+                        param: new { SeriesId = seriesId },
+                        splitOn: "FormatId").AsList();
 
                     foreach (SeriesItem seriesItem in seriesItemCollection)
                     {

@@ -48,7 +48,13 @@ namespace AnimeMacrocosm.Repository
             {
                 using (var connection = OpenConnection())
                 {
-                    posts = connection.Query<Post>(GET_ALL_POST_SELECT_QUERY + "Order By p.PostDate DESC").AsList();
+                    posts = connection.Query<Post, User, Post>(GET_ALL_POST_SELECT_QUERY + " Order By p.PostDate DESC",
+                        map: (post, user) =>
+                        {
+                            post.User = user;
+                            return post;
+                        },
+                        splitOn: "UserId").AsList();
                 }
             }
             catch (Exception ex)
@@ -61,13 +67,20 @@ namespace AnimeMacrocosm.Repository
 
         public Post GetPostById(int postId)
         {
-            Post post = new Post();
+            Post userPost = new Post();
 
             try
             {
                 using (var connection = OpenConnection())
                 {
-                    post = connection.QueryFirst<Post>(GET_ALL_POST_SELECT_QUERY + "WHERE PostId = @PostId", new { PostId = postId});
+                    //userPost = connection.Query<Post, User, Post>(GET_ALL_POST_SELECT_QUERY + " WHERE PostId = @PostId",
+                    //    map: (post, user) =>
+                    //    {
+                    //        post.User = user;
+                    //        return post;
+                    //    },
+                    //    param: new { PostId = postId },
+                    //     splitOn: "UserId");
 
                     //SqlCommand sqlCommand = new SqlCommand($"{GET_ALL_POST_SELECT_QUERY} WHERE PostId = @postId", connection);
                     //sqlCommand.Parameters.Add("@postId", SqlDbType.Int);
@@ -89,7 +102,7 @@ namespace AnimeMacrocosm.Repository
             {
                 Console.WriteLine($"There was a general exception retrieving post: {postId}. {ex.Message}");
             }
-            return post;
+            return userPost;
         }
 
         public List<Post> GetPostsByUserId(int userId)
@@ -98,7 +111,7 @@ namespace AnimeMacrocosm.Repository
 
             using (var connection = OpenConnection())
             {
-                posts = connection.Query<Post>(GET_ALL_POST_SELECT_QUERY + "WHERE u.UserId = @UserId Order By p.PostDate DESC", new { UserId = userId }).AsList();
+                posts = connection.Query<Post>(GET_ALL_POST_SELECT_QUERY + " WHERE u.UserId = @UserId Order By p.PostDate DESC", new { UserId = userId }).AsList();
 
                 //SqlCommand sqlCommand = new SqlCommand($"{GET_ALL_POST_SELECT_QUERY} Where u.UserId = @userId Order By p.PostDate DESC", connection);
                 //sqlCommand.Parameters.AddWithValue("@userId", userId);

@@ -2,8 +2,8 @@
   <h3>Posts:</h3>
 
   <div *ngFor="let post of posts">
-    <h4>{{ post.postTitle }} | {{ post.postDate }} | <a
-        href="mailto:{{post.user.userEmailAddress}}">{{ post.user.userScreenName }}</a></h4>
-    <p>{{ post.postContent }}</p>
+    <h5>{{ post.postTitle }}</h5>
+    {{ post.postDate }} | <a href="mailto:{{post.user.userEmailAddress}}">{{ post.user.userScreenName }}</a>
+    <p> <span [innerHTML]="post.postContent"> </span> </p>
   </div>
 </div>

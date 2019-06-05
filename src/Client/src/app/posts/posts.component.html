@@ -1,9 +1,9 @@
 <div class="container">
   <h3>Posts:</h3>
 
-  <div *ngFor="let post of posts" class="container border border-secondary">
+  <div *ngFor="let post of posts">
     <h5>{{ post.postTitle }}</h5>
     {{ post.postDate }} | <a href="mailto:{{post.user.userEmailAddress}}">{{ post.user.userScreenName }}</a>
-    <p>{{ post.postContent }}</p>
+    <p> <span [innerHTML]="post.postContent"> </span> </p>
   </div>
 </div>

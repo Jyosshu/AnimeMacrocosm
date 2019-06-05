@@ -28,6 +28,10 @@ export class SeriesService {
       // .catch(this.handleError);
   }
 
+  getSeriesItemById(id: number): Observable<SeriesItem> {
+    return this.httpClient.get<SeriesItem>(`${environment.apiEndpoint}/Series/GetSeriesItemById/${id}`)
+  }
+
   private handleError(error: any) {
     return Observable.throw(error.any);
   }

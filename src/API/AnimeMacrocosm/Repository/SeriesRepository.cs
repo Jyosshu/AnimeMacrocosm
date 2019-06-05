@@ -105,7 +105,7 @@ WHERE si.SeriesId = @SeriesId";
             try
             {
                 using (var connection = OpenConnection())
-                { // TODO: Fix GetSeriesItemBySeriesId
+                {
                     seriesItemCollection = connection.Query<SeriesItem, Format, SeriesItem>(SERIES_ITEM_BY_SERIES_ID_SELECT,
                         map: (seriesItem, format) =>
                        {
@@ -137,37 +137,29 @@ WHERE si.SeriesId = @SeriesId";
         {
             SeriesItem seriesItem = new SeriesItem();
 
-            string SERIES_ITEM_SELECT = @"SELECT se.SeriesId 
-, se.Title AS 'SeriesTitle'
-, ca.CreatorAuthorId
-, ca.FirstName
-, ca.LastName
-, si.SeriesItemId
-, si.Title AS 'SeriesItemTitle'
+            string SERIES_ITEM_SELECT = @"SELECT si.SeriesItemId
+, si.Title
 , si.Description
-, ps.ProductionStudioId
-, ps.ProductionStudioName
-, d.DistributorId
-, d.DistributorName
 , si.FormatId
 , fo.FormatName
-FROM Series se
-INNER JOIN Series_SeriesItems ssi ON ssi.SeriesId = se.SeriesId
-INNER JOIN SeriesItems si ON si.SeriesItemId = ssi.SeriesItemId
-INNER JOIN Series_Creators sc ON sc.SeriesId = se.SeriesId
-INNER JOIN CreatorAuthors ca ON ca.CreatorAuthorId = sc.CreatorId
-INNER JOIN SeriesItem_Production sip ON sip.SeriesItemId = si.SeriesItemId
-INNER JOIN ProductionStudios ps ON ps.ProductionStudioId = sip.ProductionStudioId
-INNER JOIN SeriesItem_Distrobution sib ON sib.SeriesItemId = si.SeriesItemId
-INNER JOIN Distributors d ON d.DistributorId = sib.DistributorId
+FROM SeriesItems si
+INNER JOIN Series_Creators sc ON sc.SeriesId = si.SeriesId
+INNER JOIN CreatorAuthors ca ON ca.CreatorAuthorId = sc.CreatorAuthorId
 INNER JOIN Formats fo ON fo.FormatId = si.FormatId
-WHERE si.SeriesItemId = @ID";
+WHERE si.SeriesItemId = @SeriesItemId";
 
             try
             {
                 using (var connection = OpenConnection())
                 {
-                    seriesItem = connection.QueryFirstOrDefault<SeriesItem>(SERIES_ITEM_SELECT, new { ID = seriesItem });
+                    seriesItem = connection.QueryFirstOrDefault<SeriesItem>(SERIES_ITEM_SELECT, new { SeriesItemId = seriesItemId });
+
+                    if (seriesItem != null)
+                    {
+                        seriesItem.CreatorAuthors = GetCreatorAuthorsBySeriesItemId(seriesItem.SeriesItemId);
+                        seriesItem.ProductionStudios = GetProductionStudiosBySeriesItemId(seriesItem.SeriesItemId);
+                        seriesItem.Distributors = GetDistributorsBySeriesItemId(seriesItem.SeriesItemId);
+                    }
                 }
             }
             catch (Exception ex)

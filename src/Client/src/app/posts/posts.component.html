@@ -1,9 +1,9 @@
-<div class="post-container">
+<div class="container">
   <h3>Posts:</h3>
 
-  <div *ngFor="let post of posts">
-    <h4>{{ post.postTitle }} | {{ post.postDate }} | <a
-        href="mailto:{{post.user.userEmailAddress}}">{{ post.user.userScreenName }}</a></h4>
+  <div *ngFor="let post of posts" class="container border border-secondary">
+    <h5>{{ post.postTitle }}</h5>
+    {{ post.postDate }} | <a href="mailto:{{post.user.userEmailAddress}}">{{ post.user.userScreenName }}</a>
     <p>{{ post.postContent }}</p>
   </div>
 </div>

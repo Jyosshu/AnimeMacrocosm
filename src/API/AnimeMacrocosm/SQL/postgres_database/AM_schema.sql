@@ -101,6 +101,7 @@ CREATE TABLE SeriesItems
     Length VARCHAR(100) NULL,
     FormatId INTEGER NULL,
     ReleaseDate DATE NULL,
+    CollectionNumber INTEGER NULL
     
     CONSTRAINT FK_SeriesItem_Series FOREIGN KEY (SeriesId) REFERENCES Series (SeriesId)
 );

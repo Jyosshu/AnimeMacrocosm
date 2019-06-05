@@ -24,5 +24,7 @@ namespace AnimeMacrocosm.Models
         public Format Format { get; set; }
 
         public DateTime? ReleaseDate { get; set; }
+
+        public int CollectionNumber { get; set; }
     }
 }

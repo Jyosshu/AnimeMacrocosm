@@ -9,6 +9,7 @@ using Microsoft.Extensions.Options;
 using Npgsql;
 using Dapper;
 using System.Runtime.InteropServices;
+using System.Linq;
 
 namespace AnimeMacrocosm.Repository
 {
@@ -100,7 +101,8 @@ FROM SeriesItems si
 INNER JOIN Series_Creators sc ON sc.SeriesId = si.SeriesId
 INNER JOIN CreatorAuthors ca ON ca.CreatorAuthorId = sc.CreatorAuthorId
 INNER JOIN Formats fo ON fo.FormatId = si.FormatId
-WHERE si.SeriesId = @SeriesId";
+WHERE si.SeriesId = @SeriesId
+ORDER BY si.CollectionNumber ASC";
 
             try
             {
@@ -152,7 +154,13 @@ WHERE si.SeriesItemId = @SeriesItemId";
             {
                 using (var connection = OpenConnection())
                 {
-                    seriesItem = connection.QueryFirstOrDefault<SeriesItem>(SERIES_ITEM_SELECT, new { SeriesItemId = seriesItemId });
+                    seriesItem = connection.Query<SeriesItem, Format, SeriesItem>(SERIES_ITEM_SELECT,
+                        map: (si, format) =>
+                        {
+                            si.Format = format;
+                            return si;
+                        }, new { SeriesItemId = seriesItemId },
+                        splitOn: "FormatId").First();
 
                     if (seriesItem != null)
                     {

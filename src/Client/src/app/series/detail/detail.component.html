@@ -1,5 +1,32 @@
-<div>
+<!-- <div>
   {{ seriesItem.title }} <br />
   {{ seriesItem.description }} <br />
   {{ seriesItem.formatName }}
+</div> -->
+
+<div class="container">
+  <div class="left-image">
+    <img src="" title="TEMP IMAGE" />
+  </div>
+  <div class="right-info">
+    <h5>{{seriesItem.title}}</h5>
+
+    <strong>Creator:</strong> <br />
+    <div *ngFor="let creatorAuthor of seriesItem.creatorAuthors">
+      {{creatorAuthor.firstName_English}} {{creatorAuthor.lastName_English}} ( {{creatorAuthor.lastName}}
+      {{creatorAuthor.firstName}} )<br />
+    </div>
+    <strong>Production Studio:</strong> <br />
+    <div *ngFor="let productionStudio of seriesItem.productionStudios">
+      {{productionStudio.productionStudioName}} <a href="{{productionStudio.websiteURL}}" target="_blank"
+        *ngIf="productionStudio.websiteURL">{{productionStudio.websiteURL}}</a>
+    </div>
+    <strong>Distributor:</strong><br />
+    <div *ngFor="let distributor of seriesItem.distributors">
+      {{distributor.distributorName}} <a href="{{distributor.websiteURL}}" target="_blank"
+        *ngIf="distributor.websiteURL">{{distributor.websiteURL}}</a>
+    </div>
+    <strong>Format:</strong> {{seriesItem.format.formatName}} <br />
+  </div>
 </div>
+<p> <span [innerHTML]="seriesItem.description"></span> </p>

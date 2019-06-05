@@ -4,7 +4,8 @@
   <div>
     <ul>
       <li *ngFor="let item of seriesSummary.seriesItems">
-        <div class="container">
+          <a routerLink="../../detail/{{item.seriesItemId}}">{{item.title}}</a> <br />
+        <!-- <div class="container">
           <div class="left-image">
             <img src="" title="TEMP IMAGE" />
           </div>
@@ -29,7 +30,7 @@
             <strong>Format:</strong> {{item.format.formatName}} <br />
           </div>
         </div>
-        <p> <span [innerHTML]="item.description"></span> </p>
+        <p> <span [innerHTML]="item.description"></span> </p> -->
       </li>
     </ul>
   </div>

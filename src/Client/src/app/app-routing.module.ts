@@ -19,7 +19,7 @@ const routes: Routes = [
     component: SummaryComponent
   },
   {
-    path: 'detail',
+    path: 'series/detail/:id',
     component: DetailComponent
   }
 ];

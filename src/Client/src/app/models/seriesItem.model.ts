@@ -14,5 +14,6 @@ export class SeriesItem {
         public length: string = '',
         public format: Format = new Format(),
         public releaseDate: Date = null,
+        public collectionNumber: number = 0,
     ) { }
 }

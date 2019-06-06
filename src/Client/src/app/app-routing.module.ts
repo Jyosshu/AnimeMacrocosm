@@ -4,6 +4,7 @@ import { PostsComponent } from './posts/posts.component';
 import { SeriesComponent } from './series/series.component';
 import { DetailComponent } from './series/detail/detail.component';
 import { SummaryComponent } from './series/summary/summary.component';
+import { LinksComponent } from './links/links.component';
 
 const routes: Routes = [
   {
@@ -21,6 +22,10 @@ const routes: Routes = [
   {
     path: 'series/detail/:id',
     component: DetailComponent
+  },
+  {
+    path: 'links',
+    component: LinksComponent
   }
 ];
 

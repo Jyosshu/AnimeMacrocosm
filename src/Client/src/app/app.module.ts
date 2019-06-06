@@ -15,6 +15,7 @@ import { SummaryComponent } from './series/summary/summary.component';
 
 import { RequestCache } from './cache/request-cache.service';
 import { CachingInterceptor } from './cache/cache-interceptor';
+import { LinksComponent } from './links/links.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { CachingInterceptor } from './cache/cache-interceptor';
     PostsComponent,
     SeriesComponent,
     DetailComponent,
-    SummaryComponent
+    SummaryComponent,
+    LinksComponent
   ],
   imports: [
     BrowserModule,

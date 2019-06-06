@@ -1,8 +1,3 @@
-<!-- <div>
-  {{ seriesItem.title }} <br />
-  {{ seriesItem.description }} <br />
-  {{ seriesItem.formatName }}
-</div> -->
 
 <div class="container">
   <div class="left-image">
@@ -18,13 +13,17 @@
     </div>
     <strong>Production Studio:</strong> <br />
     <div *ngFor="let productionStudio of seriesItem.productionStudios">
-      {{productionStudio.productionStudioName}} <a href="{{productionStudio.websiteURL}}" target="_blank"
-        *ngIf="productionStudio.websiteURL">{{productionStudio.websiteURL}}</a>
+      {{productionStudio.productionStudioName}}
+      <span  *ngIf="productionStudio.websiteURL">
+        <a href="{{productionStudio.websiteURL}}" target="_blank">{{productionStudio.websiteURL}}</a> &nbsp; <i class="fa fa-external-link fa-fw" aria-hidden="true"></i>
+      </span>
     </div>
     <strong>Distributor:</strong><br />
     <div *ngFor="let distributor of seriesItem.distributors">
-      {{distributor.distributorName}} <a href="{{distributor.websiteURL}}" target="_blank"
-        *ngIf="distributor.websiteURL">{{distributor.websiteURL}}</a>
+      {{distributor.distributorName}} 
+      <span *ngIf="distributor.websiteURL">
+        <a href="{{distributor.websiteURL}}" target="_blank">{{distributor.websiteURL}}</a> &nbsp; <i class="fa fa-external-link  fa-fw" aria-hidden="true"></i>
+      </span>
     </div>
     <strong>Format:</strong> {{seriesItem.format.formatName}} <br />
   </div>

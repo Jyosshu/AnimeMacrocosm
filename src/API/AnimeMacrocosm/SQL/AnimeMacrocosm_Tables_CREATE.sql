@@ -62,6 +62,7 @@ DROP TABLE IF EXISTS AMdev.dbo.MediaTypes;
 CREATE TABLE [MediaTypes] (
     [MediaTypeId] int NOT NULL IDENTITY,
     [MediaTypeName] nvarchar(max) NULL,
+	[Resolution] nvarchar(30) NULL,
     CONSTRAINT [PK_MediaTypes] PRIMARY KEY ([MediaTypeId])
 );
 

@@ -58,7 +58,8 @@ CREATE TABLE Images
 CREATE TABLE MediaTypes
 (
     MediaTypeId SERIAL PRIMARY KEY,
-    MediaTypeName VARCHAR(255) NULL
+    MediaTypeName VARCHAR(255) NULL,
+    Resolution VARCHAR(30) NULL
 );
 
 CREATE TABLE Users

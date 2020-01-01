@@ -19,7 +19,9 @@
     "@angular/platform-browser": "~8.2.14",
     "@angular/platform-browser-dynamic": "~8.2.14",
     "@angular/router": "~8.2.14",
+    "ajv": "^6.10.2",
     "bootstrap": "^4.3.1",
+    "co": "^3.1.0",
     "component": "^1.1.0",
     "core-js": "^2.5.4",
     "jquery": "^3.4.1",
@@ -32,8 +34,8 @@
     "zone.js": "~0.9.1"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~0.803.19",
-    "@angular/cli": "~8.3.19",
+    "@angular-devkit/build-angular": "^0.803.21",
+    "@angular/cli": "~8.3.21",
     "@angular/compiler-cli": "~8.2.14",
     "@angular/language-service": "~8.2.14",
     "@types/jasmine": "~2.8.8",

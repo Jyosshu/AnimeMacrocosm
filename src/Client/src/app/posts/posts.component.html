@@ -3,7 +3,7 @@
 
   <div *ngFor="let post of posts">
     <h5>{{ post.postTitle }}</h5>
-    {{ post.postDate }} | <a href="mailto:{{post.user.userEmailAddress}}">{{ post.user.userScreenName }}</a>
+    {{ post.postDate | date: 'full' }} | <a href="mailto:{{post.user.userEmailAddress}}">{{ post.user.userScreenName }}</a>
     <p> <span [innerHTML]="post.postContent"> </span> </p>
   </div>
 </div>
